@@ -1,0 +1,11 @@
+[*.{kt,kts}]
+indent_size = 4
+max_line_length = 120
+insert_final_newline = true
+charset = utf-8
+end_of_line = lf
+ktlint_standard_no-wildcard-imports = enabled
+ktlint_standard_filename = disabled
+
+[*.{gradle,gradle.kts,xml,yml,md,json}]
+indent_size = 2
