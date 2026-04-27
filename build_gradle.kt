@@ -9,10 +9,10 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(21) // Укажите вашу JDK, если отличается
+    jvmToolchain(21) 
 }
 
-// ─── ktlint ──────────────────────────────────────────────
+
 ktlint {
     android.set(false)
     outputToConsole.set(true)
@@ -24,7 +24,6 @@ ktlint {
     }
 }
 
-// ─── detekt ──────────────────────────────────────────────
 detekt {
     toolVersion = "1.24.0"
     config.setFrom(files("config/detekt/detekt.yml"))
