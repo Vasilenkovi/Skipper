@@ -1,2 +1,0 @@
-class fks { asdsaf
-}
