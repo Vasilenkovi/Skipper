@@ -1,0 +1,27 @@
+name: Kotlin CI
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  lint-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: ''
+
+      - name: Make Gradle executable
+        run: chmod +x ./gradlew
+
+      - name: Run ktlint & detekt
+        run: ./gradlew ktlintCheck detekt --no-daemon
