@@ -22,8 +22,8 @@ jobs:
 
       - name: Make Gradle executable
         run: chmod +x ./gradlew
-        working-directory: Skipper/backend
+        working-directory: backend
 
       - name: Run ktlint & detekt
         run: ./gradlew ktlintCheck detekt --no-daemon
-        working-directory: Skipper/backend
+        working-directory: backend
