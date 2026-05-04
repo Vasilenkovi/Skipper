@@ -19,21 +19,26 @@ kotlin {
 }
 
 
+
 ktlint {
-    version.set("1.3.0")
-    android.set(false)
-    outputToConsole.set(true)
-    ignoreFailures.set(false)
-    enableExperimentalRules.set(false)
+    version = "1.3.0"
+    android = false
+    outputToConsole = true
+    ignoreFailures = false
+    enableExperimentalRules = false
+    filter {
+        exclude { element -> element.file.path.contains("generated/") }
+    }
 }
 
 
 detekt {
     toolVersion = "1.23.0"
-    buildUponDefaultConfig.set(true)
-    allRules.set(false)
-    config.setFrom(files("detekt.yml")) // создайте этот файл ниже
-    parallel.set(true)
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(files("detekt.yml"))  // ← здесь .setFrom() остаётся!
+    parallel = true
+    autoCorrect = false
 }
 
 
