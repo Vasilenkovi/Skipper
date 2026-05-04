@@ -33,10 +33,10 @@ ktlint {
 
 
 detekt {
-    toolVersion = "1.23.0"
+    toolVersion = "1.23.5"
     buildUponDefaultConfig = true
     allRules = false
-    config.setFrom(files("detekt.yml"))  // ← здесь .setFrom() остаётся!
+    config.setFrom(files("detekt.yml"))
     parallel = true
     autoCorrect = false
 }
