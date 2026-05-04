@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     kotlin("plugin.serialization") version "2.1.10"
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.0"
 }
 
 group = "com.example"
@@ -15,6 +17,26 @@ application {
 kotlin {
     jvmToolchain(21)
 }
+
+
+ktlint {
+    version.set("1.3.0")
+    android.set(false)
+    outputToConsole.set(true)
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(false)
+}
+
+
+detekt {
+    toolVersion = "1.23.0"
+    buildUponDefaultConfig.set(true)
+    allRules.set(false)
+    config.setFrom(files("detekt.yml")) // создайте этот файл ниже
+    parallel.set(true)
+}
+
+
 dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.47.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.47.0")
