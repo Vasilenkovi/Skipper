@@ -7,7 +7,7 @@ on:
     branches: [ "main", "master", "develop" ]
 
 jobs:
-  quality-check:
+  lint-and-analyze:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,11 +18,11 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          cache: gradle
 
       - name: Make Gradle executable
-        run: chmod +x backend/gradlew
-        
+        run: chmod +x ./gradlew
+        working-directory: backend
 
       - name: Run ktlint & detekt
-        run: backend/gradlew ktlintCheck detekt --no-daemon
+        run: ./gradlew ktlintCheck detekt --no-daemon
+        working-directory: backend
