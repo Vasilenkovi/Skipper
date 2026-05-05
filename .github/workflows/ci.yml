@@ -21,7 +21,8 @@ jobs:
           cache: gradle
 
       - name: Make Gradle executable
-        run: chmod +x ./gradlew
+        run: chmod +x backend/gradlew
+        
 
       - name: Run ktlint & detekt
-        run: ./gradlew ktlintCheck detekt --no-daemon
+        run: backend/gradlew ktlintCheck detekt --no-daemon
