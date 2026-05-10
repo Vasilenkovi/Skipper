@@ -1,6 +1,9 @@
-package com.example.db
+package com.example.core
 
-import com.example.features.mentor.MentorProfilesTable
+import com.example.features.competences.Competences
+import com.example.features.competences.ExpertCompetences
+import com.example.features.users.ExpertProfiles
+import com.example.features.users.Users
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -26,7 +29,7 @@ object DatabaseFactory {
         Database.connect(dataSource)
 
         transaction {
-            SchemaUtils.create(MentorProfilesTable)
+            SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences)
         }
     }
 }
