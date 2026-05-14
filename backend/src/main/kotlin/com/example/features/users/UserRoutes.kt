@@ -1,10 +1,16 @@
 package com.example.features.users
 
+import com.example.core.JwtConfig
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 
 fun Route.userRoutes(userService: UserService) {
@@ -30,6 +36,68 @@ fun Route.userRoutes(userService: UserService) {
                 }
             } catch(e: Exception){
                 call.respond(HttpStatusCode.BadRequest,mapOf("error" to "Неверный формат данных: ${e.localizedMessage}"))
+            }
+        }
+
+        get("/mentors"){
+            try {
+                val mentors = userService.getAllMentors()
+
+                call.respond(HttpStatusCode.OK, mentors)
+            } catch(e: Exception){
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError,mapOf("error" to "Ошибка получения списка менторов"))
+            }
+        }
+
+        get("/mentors/{id}"){
+            val id = call.parameters["id"]
+
+            if (id == null){
+                call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Missing mentor ID" ))
+                return@get
+            }
+
+            try{
+                val mentor = userService.getMentorById(id)
+                if (mentor != null){
+                    call.respond(HttpStatusCode.OK, mentor)
+                } else{
+                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Mentor not found"))
+                }
+            } catch(e: Exception){
+                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Invalid ID format"))
+            }
+        }
+        post("/login"){
+            try{
+                val request = call.receive<LoginRequest>()
+                val userData = userService.authenticate(request)
+
+                if (userData != null){
+                    val(userId, role) = userData
+
+                    val token = JwtConfig.generateToken(userId,role)
+
+                    call.respond(HttpStatusCode.OK, TokenResponse(token, userId, role))
+                } else{
+                    call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "Неверный email или пароль" ))
+                }
+            } catch(e: Exception){
+                call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Ошибка формата запроса"))
+            }
+        }
+        authenticate {
+            put("/update-profile"){
+                try {
+                    val token = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val request = call.receive<UpdateProfileRequest>()
+                    userService.updateExpertProfile(token, request)
+                    call.respond(HttpStatusCode.OK, mapOf("message" to "Профиль успешно обновлен"))
+
+                } catch (e : Exception){
+                    call.respond(HttpStatusCode.BadRequest, message = mapOf("error" to "Ошибка формата запроса"))
+                }
             }
         }
     }

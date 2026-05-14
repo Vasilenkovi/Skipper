@@ -11,7 +11,7 @@ class CompetenceService {
     fun addCompetenceToExpert(request: AddCompetenceRequest): Boolean {
         return transaction {
             try{
-                ExpertProfiles.insert {
+                ExpertCompetences.insert {
                     it[ExpertCompetences.expertId] = UUID.fromString(request.expertProfileId)
                     it[ExpertCompetences.competenceId]=request.competenceId
                 }
