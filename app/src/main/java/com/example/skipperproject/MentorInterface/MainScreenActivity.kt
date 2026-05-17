@@ -3,6 +3,7 @@ package com.example.skipperproject.MentorInterface
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.Dimension
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -11,11 +12,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
 import com.example.skipperproject.ui.SkipperScreen
 import com.example.skipperproject.ui.theme.SkipperColors
+import com.example.skipperproject.ui.theme.SkipperDimensions
 import com.example.skipperproject.ui.theme.SkipperProjectTheme
 
 class MainScreenActivity : ComponentActivity() {
@@ -66,7 +69,8 @@ fun WelcomeMessage() {
         text = stringResource(R.string.welcome_message),
         backgroundColor = SkipperColors.darkGrey,
         alignment = Alignment.Start,
-        shape = RoundedCornerShape(topStart = 0.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 16.dp)
+        shape = RoundedCornerShape(topStart = 0.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 16.dp),
+        textAlign = TextAlign.Left
     )
 }
 
@@ -76,7 +80,8 @@ fun ReadyToHelpMessage() {
         text = stringResource(R.string.ready_to_help),
         backgroundColor = SkipperColors.darkGrey,
         alignment = Alignment.End,
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 16.dp)
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 16.dp, bottomStart = 16.dp),
+        textAlign = TextAlign.Right
     )
 }
 
@@ -86,7 +91,8 @@ fun FindMentorMessage() {
         text = stringResource(R.string.find_mentor),
         backgroundColor = SkipperColors.darkGrey,
         alignment = Alignment.End,
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 0.dp, bottomStart = 16.dp)
+        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp, bottomEnd = 0.dp, bottomStart = 16.dp),
+        textAlign = TextAlign.Right
     )
 }
 
@@ -99,8 +105,8 @@ fun StartSearchButton(onClick: () -> Unit) {
                 containerColor = SkipperColors.mainYellow,
                 contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(12.dp),
-            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp)
+            shape = RoundedCornerShape(SkipperDimensions.buttonRound),
+            contentPadding = PaddingValues(horizontal = SkipperDimensions.mediumButtonHor, vertical = SkipperDimensions.mediumButtonVert)
         ) {
             Text(
                 text = stringResource(R.string.start_search),
@@ -115,7 +121,8 @@ fun ChatBubble(
     text: String,
     backgroundColor: Color,
     alignment: Alignment.Horizontal,
-    shape: RoundedCornerShape
+    shape: RoundedCornerShape,
+    textAlign: TextAlign
 ) {
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -127,9 +134,10 @@ fun ChatBubble(
         ) {
             Text(
                 text = text,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                modifier = Modifier.padding(horizontal = SkipperDimensions.bubbleHorSpace, vertical = SkipperDimensions.bubbleVertSpace),
                 style = MaterialTheme.typography.headlineLarge,
-                color = Color.Black
+                color = Color.Black,
+                textAlign = textAlign
             )
         }
     }

@@ -11,7 +11,8 @@ import com.example.skipperproject.ui.theme.SkipperColors
 @Composable
 fun SkipperScreen(
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
+
 ) {
     Column(
         modifier = modifier
