@@ -1,11 +1,9 @@
 package com.example.core
 
-import io.ktor.server.auth.*
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import com.example.features.users.ExpertProfiles.userId
-import java.util.Date
+import java.util.*
 
 object JwtConfig {
     private val secret = System.getenv("JWT_SECRET")

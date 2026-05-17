@@ -2,17 +2,9 @@ package com.example.features.users
 
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.innerJoin
-import org.jetbrains.exposed.sql.update
-import java.util.UUID
-import kotlin.let
+import java.util.*
 
 class UserService {
 
@@ -99,13 +91,12 @@ class UserService {
             }.singleOrNull()
 
             if (userRow != null) {
-                Pair(userRow[Users.id].value.toString(),userRow[Users.role])
-            }
-            else null
+                Pair(userRow[Users.id].value.toString(), userRow[Users.role])
+            } else null
         }
     }
 
-    fun updateExpertProfile(mentorID: String, updateProfileRequest: UpdateProfileRequest){
+    fun updateExpertProfile(mentorID: String, updateProfileRequest: UpdateProfileRequest) {
         return transaction {
             val uuid = UUID.fromString(mentorID)
 
@@ -116,9 +107,13 @@ class UserService {
             }
 
             ExpertProfiles.update({ ExpertProfiles.userId eq uuid }) {
-                updateProfileRequest.newEducation?.let{safeEdu-> it[education]=safeEdu }
-                updateProfileRequest.newExperienceDescription?.let{safeExperienceDescription-> it[experienceDescription]=safeExperienceDescription }
-                updateProfileRequest.newHourlyRate?.let{safeHourlyRate->it[hourlyRate]=safeHourlyRate.toBigDecimal() }
+                updateProfileRequest.newEducation?.let { safeEdu -> it[education] = safeEdu }
+                updateProfileRequest.newExperienceDescription?.let { safeExperienceDescription ->
+                    it[experienceDescription] = safeExperienceDescription
+                }
+                updateProfileRequest.newHourlyRate?.let { safeHourlyRate ->
+                    it[hourlyRate] = safeHourlyRate.toBigDecimal()
+                }
             }
         }
     }

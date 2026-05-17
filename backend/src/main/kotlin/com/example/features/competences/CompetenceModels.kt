@@ -4,6 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddCompetenceRequest(
-    val expertProfileId: String,
-    val competenceId: Int
+    val tagName: String
 )

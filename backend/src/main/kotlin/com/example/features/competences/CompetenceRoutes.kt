@@ -1,31 +1,41 @@
 package com.example.features.competences
 
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.call
-import io.ktor.server.auth.authenticate
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.get
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Route.competenceRoutes(competenceService: CompetenceService) {
     route("/api/competences") {
-        get("/"){
+        get("/") {
 
         }
         authenticate {
 
 
-            post("/add-to-expert"){
+            post("/add-to-expert") {
                 try {
+                    val expertId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
                     val request = call.receive<AddCompetenceRequest>()
-                    val success = competenceService.addCompetenceToExpert(request)
+
+                    if (request.tagName.isBlank()) {
+                        call.respond(
+                            status = HttpStatusCode.BadRequest,
+                            message = mapOf("error" to "Название навыка не может быть пустым")
+                        )
+                        return@post
+                    }
+
+                    val success = competenceService.addCompetenceToExpert(
+                        userIdFromToken = expertId,
+                        tagName = request.tagName.trim()
+                    )
 
                     if (success) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Навык успешно привязан к эксперту"))
-                    } else{
+                    } else {
                         call.respond(
                             HttpStatusCode.Conflict,
                             mapOf("error" to "Не удалось добавить навык. Возможно, он уже привязан.")
@@ -35,6 +45,7 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
                     call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный формат данных"))
                 }
             }
+
         }
     }
 }

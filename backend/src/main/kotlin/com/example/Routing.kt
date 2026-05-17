@@ -1,9 +1,9 @@
 package com.example
 
 
+import com.example.core.DatabaseFactory
 import com.example.features.competences.CompetenceService
 import com.example.features.competences.competenceRoutes
-import com.example.core.DatabaseFactory
 import com.example.features.users.UserService
 import com.example.features.users.userRoutes
 import io.ktor.server.application.*

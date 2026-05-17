@@ -1,7 +1,6 @@
 package com.example.features.users
 
 import kotlinx.serialization.Serializable
-import java.math.BigDecimal
 
 @Serializable
 data class CreateUserRequest(
@@ -11,9 +10,10 @@ data class CreateUserRequest(
     val fullName: String,
     val role: String,
     val experienceDescription: String? = null,
-    val hourlyRate: Double? = null,
+    val hourlyRate: String? = null,
     val education: String? = null
 )
+
 @Serializable
 data class UserProfileResponse(
     val id: String,
@@ -22,7 +22,7 @@ data class UserProfileResponse(
     val photoUrl: String?,
     val contactInfo: String?,
     val role: String,
-    val experienceDescription: String?=null,
+    val experienceDescription: String? = null,
     val hourlyRate: Double? = null,
     val averageRating: Float? = null
 )
@@ -38,8 +38,7 @@ data class MentorCardResponse(
 
 @Serializable
 data class CompetenceResponse(
-    val id: Int,
-    val name: String
+    val id: Int, val name: String
 )
 
 @Serializable
@@ -57,20 +56,18 @@ data class DetailedMentorResponse(
 
 @Serializable
 data class LoginRequest(
-    val email: String,
-    val passwordHash: String)
+    val email: String, val passwordHash: String
+)
 
 @Serializable
 data class TokenResponse(
-    val token: String,
-    val userId: String,
-    val role: String
+    val token: String, val userId: String, val role: String
 )
 
 @Serializable
 data class UpdateProfileRequest(
-    val newFullName: String?=null,
-    val newExperienceDescription: String?=null,
-    val newHourlyRate: String?=null,
-    val newEducation: String?=null
+    val newFullName: String? = null,
+    val newExperienceDescription: String? = null,
+    val newHourlyRate: String? = null,
+    val newEducation: String? = null
 )

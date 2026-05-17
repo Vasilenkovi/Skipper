@@ -7,13 +7,13 @@ import io.ktor.server.auth.jwt.*
 
 fun Application.configureSecurity() {
     install(Authentication) {
-        jwt{
+        jwt {
             verifier(JwtConfig.verifier)
 
             validate { credential ->
                 if (credential.payload.getClaim("userId").asString() != "") {
                     JWTPrincipal(credential.payload)
-                } else{
+                } else {
                     null
                 }
             }
