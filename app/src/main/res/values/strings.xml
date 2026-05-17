@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">SkipperProject</string>
+    <string name="welcome_message">Приём,\nSkipper?</string>
+    <string name="ready_to_help">Мы готовы\nпомочь!</string>
+    <string name="find_mentor">Найди своего\nментора</string>
+    <string name="start_search">Начать поиск</string>
 </resources>

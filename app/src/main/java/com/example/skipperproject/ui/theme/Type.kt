@@ -2,33 +2,145 @@ package com.example.skipperproject.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import com.example.skipperproject.R
 
-// Set of Material typography styles to start with
-val Typography = Typography(
-    bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+// 1. Сначала создаем FontFamily, объединяя ваши файлы шрифтов
+val SegoeUI = FontFamily(
+    Font(R.font.segoe_ui_regular, FontWeight.Normal),
+    Font(R.font.segoe_ui_bold, FontWeight.Bold),
+    Font(R.font.segoe_ui_semi_bold, FontWeight.SemiBold)
+)
+
+object MobileTextStyles{
+    val MainScreenText = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.Bold,
+        fontSize = 40.sp,
+        lineHeight = 46.sp,
+        letterSpacing = (-2).sp
+    )
+
+    val MainScreenButton = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        lineHeight = 46.sp,
+        letterSpacing = (-2).sp
+    )
+
+    val ButtonsText = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.Bold,
+        fontSize = 36.sp,
+        lineHeight = 46.sp,
+        letterSpacing = 0.sp
+    )
+
+    val HintText = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 46 .sp,
+        letterSpacing = 0.sp
+    )
+
+//    val HintTextUnderlined = HintText.copy(
+//        textDecoration = TextDecoration.Underline
+//    )
+
+    val HelpButtonSmall = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 14.sp,
+        lineHeight = 46.sp,
+        letterSpacing = 0.sp
+    )
+
+    val HelpButtonSmallUnderlined = HelpButtonSmall.copy(
+        textDecoration = TextDecoration.Underline
+    )
+
+    val HelpButtonLarge = TextStyle(
+        fontFamily = SegoeUI,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
+        lineHeight = 46.sp,
         letterSpacing = 0.sp
-    ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
     )
-    */
-)
+
+    val HelpButtonLargeUnderlined = HelpButtonLarge.copy(
+        textDecoration = TextDecoration.Underline
+    )
+
+    val QuestionText = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+        lineHeight = 46.sp,
+        letterSpacing = 0.sp
+    )
+
+}
+
+//object AppTextStyles{
+//    val H1head = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.Bold,
+//        fontSize = 48.sp,
+//        lineHeight = 56.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//    val H2Bold = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.Bold,
+//        fontSize = 32.sp,
+//        lineHeight = 36.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//    val H2SemiBold = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.SemiBold,
+//        fontSize = 32.sp,
+//        lineHeight = 36.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//    val H3Bold = TextStyle( //
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.Bold,
+//        fontSize = 28.sp,
+//        lineHeight = 32.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//    val H4SemiBold = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.SemiBold,
+//        fontSize = 24.sp,
+//        lineHeight = 28.sp,
+//        letterSpacing = 0.sp
+//    )
+//    val H4Regular = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.Normal,
+//        fontSize = 24.sp,
+//        lineHeight = 28.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//    val H5 = TextStyle(
+//        fontFamily = SegoeUI,
+//        fontWeight = FontWeight.Normal,
+//        fontSize = 20.sp,
+//        lineHeight = 24.sp,
+//        letterSpacing = 0.sp
+//    )
+//
+//}
