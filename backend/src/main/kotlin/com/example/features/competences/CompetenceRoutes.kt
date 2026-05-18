@@ -2,7 +2,7 @@ package com.example.features.competences
 
 import io.ktor.http.*
 import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -46,6 +46,33 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
                 }
             }
 
+            delete("/remove-from-expert") {
+                try {
+                    val expertId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val request = call.receive<RemoveCompetenceRequest>()
+
+                    if (request.tagName.isBlank()) {
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            mapOf("error" to "Название навыка не может быть пустым")
+                        )
+                        return@delete
+                    }
+
+                    val success = competenceService.removeCompetenceFromExpert(
+                        userIdFromToken = expertId,
+                        tagName = request.tagName.trim()
+                    )
+
+                    if (success) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Навык успешно удален из профиля"))
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Навык или профиль не найден"))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный формат данных"))
+                }
+            }
         }
     }
 }

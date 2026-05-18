@@ -2,6 +2,7 @@ package com.example.core
 
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
+import com.example.features.slots.Slots
 import com.example.features.users.ExpertProfiles
 import com.example.features.users.Users
 import com.zaxxer.hikari.HikariConfig
@@ -9,6 +10,8 @@ import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import kotlinx.coroutines.Dispatchers
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 object DatabaseFactory {
     fun init() {
@@ -29,7 +32,10 @@ object DatabaseFactory {
         Database.connect(dataSource)
 
         transaction {
-            SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences)
+            SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences, Slots)
         }
     }
+
 }
+suspend fun <T> dbQuery(block: suspend () -> T): T =
+    newSuspendedTransaction(Dispatchers.IO) { block() }

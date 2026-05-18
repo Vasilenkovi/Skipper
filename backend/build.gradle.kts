@@ -43,9 +43,11 @@ detekt {
 
 
 dependencies {
+    implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains.exposed:exposed-core:0.47.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.47.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.47.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.47.0")
     implementation("org.postgresql:postgresql:42.7.2")
     implementation("com.zaxxer:HikariCP:5.1.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json")

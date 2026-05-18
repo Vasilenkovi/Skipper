@@ -95,6 +95,21 @@ fun Route.userRoutes(userService: UserService) {
             }
         }
         authenticate {
+            get("/profile") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val mentorProfile = userService.getMentorById(userId)
+
+                    if (mentorProfile != null) {
+                        call.respond(HttpStatusCode.OK, mentorProfile)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Профиль ментора не найден"))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения профиля"))
+                }
+            }
+
             put("/update-profile") {
                 try {
                     val token = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
@@ -115,6 +130,24 @@ fun Route.userRoutes(userService: UserService) {
 
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.BadRequest, message = mapOf("error" to "Ошибка формата запроса"))
+                }
+            }
+
+            delete("/profile") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val success = userService.deleteExpertRole(userId)
+
+                    if (success) {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            mapOf("message" to "Вы больше не являетесь экспертом. Роль изменена на Менти.")
+                        )
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Профиль эксперта не найден"))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка при удалении профиля"))
                 }
             }
         }

@@ -1,17 +1,15 @@
 package com.example.features.competences
 
+import com.example.core.dbQuery
 import com.example.features.users.ExpertProfiles
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.UUID
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import java.util.*
 
 class CompetenceService {
 
-    fun addCompetenceToExpert(userIdFromToken: String, tagName: String): Boolean {
-        return transaction {
+    suspend fun addCompetenceToExpert(userIdFromToken: String, tagName: String): Boolean {
+        return dbQuery {
             try {
                 val existingTag = Competences
                     .select { Competences.name eq tagName }
@@ -30,7 +28,7 @@ class CompetenceService {
                     .singleOrNull()
 
 
-                if (expertProfileRow == null) return@transaction false
+                if (expertProfileRow == null) return@dbQuery false
 
 
                 val realProfileId = expertProfileRow[ExpertProfiles.id].value
@@ -41,7 +39,7 @@ class CompetenceService {
                     }.any()
 
                 if (alreadyExist) {
-                    return@transaction false
+                    return@dbQuery false
                 }
 
                 ExpertCompetences.insert {
@@ -49,11 +47,36 @@ class CompetenceService {
                     it[competenceId] = compId
                 }
 
-                return@transaction true
+                return@dbQuery true
             } catch (e: Exception) {
                 e.printStackTrace()
                 false
             }
+        }
+    }
+
+    suspend fun removeCompetenceFromExpert(userIdFromToken: String, tagName: String): Boolean = dbQuery {
+        try {
+            val expertProfileRow = ExpertProfiles
+                .select { ExpertProfiles.userId eq UUID.fromString(userIdFromToken) }
+                .singleOrNull() ?: return@dbQuery false
+
+            val realProfileId = expertProfileRow[ExpertProfiles.id].value
+
+            val competenceRow = Competences
+                .select { Competences.name eq tagName }
+                .singleOrNull() ?: return@dbQuery false
+
+            val compId = competenceRow[Competences.id].value
+
+            val deletedRows = ExpertCompetences.deleteWhere {
+                (expertId eq realProfileId) and (competenceId eq compId)
+            }
+
+            deletedRows > 0
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 

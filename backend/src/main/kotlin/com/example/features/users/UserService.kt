@@ -1,19 +1,24 @@
 package com.example.features.users
 
+import com.example.core.dbQuery
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.mindrot.jbcrypt.BCrypt
+
 import java.util.*
 
 class UserService {
 
-    fun registerUser(request: CreateUserRequest): UUID? {
-        return transaction {
+    suspend fun registerUser(request: CreateUserRequest): UUID? {
+        return dbQuery {
             try {
+                val securedPassword = BCrypt.hashpw(request.passwordHash, BCrypt.gensalt(12))
+
                 val newUserID = Users.insertAndGetId {
                     it[email] = request.email
-                    it[passwordHash] = request.passwordHash
+                    it[passwordHash] = securedPassword
                     it[authProvider] = request.authProvider
                     it[fullName] = request.fullName
                     it[role] = request.role
@@ -36,8 +41,8 @@ class UserService {
         }
     }
 
-    fun getAllMentors(): List<MentorCardResponse> {
-        return transaction {
+    suspend fun getAllMentors(): List<MentorCardResponse> {
+        return dbQuery {
             (Users innerJoin ExpertProfiles)
                 .select { Users.role eq "Mentor" }
                 .map { row ->
@@ -52,13 +57,13 @@ class UserService {
         }
     }
 
-    fun getMentorById(mentorID: String): DetailedMentorResponse? {
-        return transaction {
+    suspend fun getMentorById(mentorID: String): DetailedMentorResponse? {
+        return dbQuery {
             val uuid = UUID.fromString(mentorID)
 
             val mentorRow = (Users innerJoin ExpertProfiles)
                 .select { Users.id eq uuid }
-                .singleOrNull() ?: return@transaction null
+                .singleOrNull() ?: return@dbQuery null
 
             val actualProfileId = mentorRow[ExpertProfiles.id]
 
@@ -84,20 +89,24 @@ class UserService {
         }
     }
 
-    fun authenticate(request: LoginRequest): Pair<String, String>? {
-        return transaction {
-            val userRow = Users.select {
-                (Users.email eq request.email) and (Users.passwordHash eq request.passwordHash)
-            }.singleOrNull()
+    suspend fun authenticate(request: LoginRequest): Pair<String, String>? = dbQuery {
+        val userRow = Users.select {
+            Users.email eq request.email
+        }.singleOrNull()
 
-            if (userRow != null) {
-                Pair(userRow[Users.id].value.toString(), userRow[Users.role])
-            } else null
+        if (userRow != null) {
+            val storedHash = userRow[Users.passwordHash]
+            val incomingPassword = request.passwordHash
+
+            if (BCrypt.checkpw(incomingPassword, storedHash)) {
+                return@dbQuery Pair(userRow[Users.id].value.toString(), userRow[Users.role])
+            }
         }
+        return@dbQuery null
     }
 
-    fun updateExpertProfile(mentorID: String, updateProfileRequest: UpdateProfileRequest) {
-        return transaction {
+    suspend fun updateExpertProfile(mentorID: String, updateProfileRequest: UpdateProfileRequest) {
+        return dbQuery {
             val uuid = UUID.fromString(mentorID)
 
             if (updateProfileRequest.newFullName != null) {
@@ -115,6 +124,33 @@ class UserService {
                     it[hourlyRate] = safeHourlyRate.toBigDecimal()
                 }
             }
+        }
+    }
+
+    suspend fun deleteExpertRole(userIdFromToken: String): Boolean = dbQuery {
+        try {
+            val userUuid = UUID.fromString(userIdFromToken)
+
+            val expertProfileRow =
+                ExpertProfiles.select { ExpertProfiles.userId eq userUuid }.singleOrNull() ?: return@dbQuery false
+            val realProfileId = expertProfileRow[ExpertProfiles.id]
+
+            // Очищаем теги перед удалением профиля
+            ExpertCompetences.deleteWhere { expertId eq realProfileId }
+
+            // Удаляем сам профиль
+            val deletedRows = ExpertProfiles.deleteWhere { userId eq userUuid }
+
+            if (deletedRows > 0) {
+                Users.update({ Users.id eq userUuid }) {
+                    it[role] = "Mentee"
+                }
+                return@dbQuery true
+            }
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
         }
     }
 }
