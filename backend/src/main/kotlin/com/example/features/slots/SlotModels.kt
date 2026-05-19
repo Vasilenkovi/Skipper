@@ -12,6 +12,8 @@ data class SlotResponse(
     val id: String,
     val expertId: String,
     val menteeId: String?,
+    val menteeName: String?,
+    val menteeEmail: String?,
     val startTime: String,
     val endTime: String,
     val status: String

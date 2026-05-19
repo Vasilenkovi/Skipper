@@ -2,6 +2,7 @@ package com.example.features.slots
 
 import com.example.core.dbQuery
 import com.example.features.users.ExpertProfiles
+import com.example.features.users.Users
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import java.time.LocalDateTime
@@ -52,19 +53,25 @@ class SlotService {
 
     suspend fun getSlotsForExpert(userIdFromToken: String): List<SlotResponse> = dbQuery {
         try {
+            val userUuid = UUID.fromString(userIdFromToken)
             val expertProfileRow = ExpertProfiles
-                .select { ExpertProfiles.userId eq UUID.fromString(userIdFromToken) }
+                .select { ExpertProfiles.userId eq userUuid }
                 .singleOrNull() ?: return@dbQuery emptyList()
 
             val realProfileId = expertProfileRow[ExpertProfiles.id].value
 
-            Slots.select { Slots.expertId eq realProfileId }
+            // Используем LEFT JOIN, чтобы подтянуть данные Менти, если слот занят
+            (Slots leftJoin Users).select {
+                Slots.expertId eq realProfileId
+            }
                 .orderBy(Slots.startTime to SortOrder.ASC)
                 .map { row ->
                     SlotResponse(
                         id = row[Slots.id].value.toString(),
-                        expertId = realProfileId.toString(),
+                        expertId = row[Slots.expertId].value.toString(),
                         menteeId = row[Slots.menteeId]?.value?.toString(),
+                        menteeName = row[Users.fullName],
+                        menteeEmail = row[Users.email],
                         startTime = row[Slots.startTime].toString(),
                         endTime = row[Slots.endTime].toString(),
                         status = row[Slots.status]
@@ -133,7 +140,7 @@ class SlotService {
             Slots.select {
                 (Slots.expertId eq realProfileId) and
                     (Slots.status eq "FREE") and
-                    (Slots.startTime greaterEq LocalDateTime.now()) // Только будущие слоты!
+                    (Slots.startTime greaterEq LocalDateTime.now())
             }
                 .orderBy(Slots.startTime to SortOrder.ASC)
                 .map { row ->
@@ -141,6 +148,8 @@ class SlotService {
                         id = row[Slots.id].value.toString(),
                         expertId = mentorUserId,
                         menteeId = null,
+                        menteeName = null,
+                        menteeEmail = null,
                         startTime = row[Slots.startTime].toString(),
                         endTime = row[Slots.endTime].toString(),
                         status = row[Slots.status]
@@ -149,6 +158,29 @@ class SlotService {
         } catch (e: Exception) {
             e.printStackTrace()
             emptyList()
+        }
+    }
+
+    suspend fun confirmPayment(slotId: String): String? = dbQuery {
+        try {
+            val slotUuid = UUID.fromString(slotId)
+
+            val slotRow = Slots.select { Slots.id eq slotUuid }.singleOrNull()
+                ?: return@dbQuery "Слот не найден"
+
+            if (slotRow[Slots.status] != "PENDING") {
+                return@dbQuery "Оплатить можно только слоты в статусе ожидания (PENDING)"
+            }
+
+            Slots.update({ Slots.id eq slotUuid }) {
+                it[status] = "BOOKED"
+                it[updatedAt] = LocalDateTime.now()
+            }
+
+            return@dbQuery null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@dbQuery "Неверный формат ID слота"
         }
     }
 }

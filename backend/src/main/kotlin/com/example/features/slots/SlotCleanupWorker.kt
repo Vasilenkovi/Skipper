@@ -2,7 +2,6 @@ package com.example.features.slots
 
 import com.example.core.dbQuery
 import kotlinx.coroutines.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.update
 import java.time.LocalDateTime

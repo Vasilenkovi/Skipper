@@ -53,6 +53,25 @@ fun Route.slotRoutes(slotService: SlotService) {
                 }
             }
 
+            post("/{id}/confirm-payment") {
+                try {
+                    val slotId = call.parameters["id"]
+                    if (slotId == null) {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Отсутствует ID слота"))
+                        return@post
+                    }
+
+                    val errorMessage = slotService.confirmPayment(slotId)
+
+                    if (errorMessage == null) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Оплата прошла успешно! Слот забронирован."))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка сервера"))
+                }
+            }
 
             get {
                 try {
