@@ -1,0 +1,44 @@
+package com.example.features.slots
+
+import com.example.core.dbQuery
+import kotlinx.coroutines.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.update
+import java.time.LocalDateTime
+
+object SlotCleanupWorker {
+    private var job: Job? = null
+
+    fun start() {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            while (isActive) {
+                try {
+                    cleanupZombieSlots()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                delay(60_000L)
+            }
+        }
+    }
+
+    fun stop() {
+        job?.cancel()
+    }
+
+    private suspend fun cleanupZombieSlots() = dbQuery {
+        val thresholdTime = LocalDateTime.now().minusMinutes(15)
+
+        val updatedCount = Slots.update({
+            (Slots.status eq "PENDING") and (Slots.updatedAt less thresholdTime)
+        }) {
+            it[status] = "FREE"
+            it[menteeId] = null
+        }
+
+        if (updatedCount > 0) {
+            println("Очищено зависших слотов: $updatedCount")
+        }
+    }
+}

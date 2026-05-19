@@ -11,6 +11,8 @@ object Slots : UUIDTable("slots") {
 
     val menteeId = reference("mentee_id", Users, onDelete = ReferenceOption.SET_NULL).nullable()
 
+    val txId = varchar("tx_id", 255).nullable()
+
     val startTime = datetime("start_time")
     val endTime = datetime("end_time")
 
