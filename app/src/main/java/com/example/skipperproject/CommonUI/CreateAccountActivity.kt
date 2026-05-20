@@ -138,7 +138,7 @@ fun ConfirmationRow(interactionSource: MutableInteractionSource) {
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(8.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 4.dp, vertical = 0.dp)
         ) {
             Text(
                 text = stringResource(R.string.confirm_email_button),
@@ -151,7 +151,7 @@ fun ConfirmationRow(interactionSource: MutableInteractionSource) {
 
         Text(
             text = stringResource(R.string.resend_email),
-            style = MaterialTheme.typography.bodySmall,
+            style = MobileTextStyles.SmallestText,
             modifier = Modifier.clickable(
                 interactionSource = interactionSource,
                 indication = null

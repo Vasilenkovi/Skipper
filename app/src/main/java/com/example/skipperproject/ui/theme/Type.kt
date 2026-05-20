@@ -85,62 +85,12 @@ object MobileTextStyles{
         letterSpacing = 0.sp
     )
 
-}
+    val SmallestText = TextStyle(
+        fontFamily = SegoeUI,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp,
+        lineHeight = 46.sp,
+        letterSpacing = 0.sp
+    )
 
-//object AppTextStyles{
-//    val H1head = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.Bold,
-//        fontSize = 48.sp,
-//        lineHeight = 56.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//    val H2Bold = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.Bold,
-//        fontSize = 32.sp,
-//        lineHeight = 36.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//    val H2SemiBold = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.SemiBold,
-//        fontSize = 32.sp,
-//        lineHeight = 36.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//    val H3Bold = TextStyle( //
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.Bold,
-//        fontSize = 28.sp,
-//        lineHeight = 32.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//    val H4SemiBold = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.SemiBold,
-//        fontSize = 24.sp,
-//        lineHeight = 28.sp,
-//        letterSpacing = 0.sp
-//    )
-//    val H4Regular = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.Normal,
-//        fontSize = 24.sp,
-//        lineHeight = 28.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//    val H5 = TextStyle(
-//        fontFamily = SegoeUI,
-//        fontWeight = FontWeight.Normal,
-//        fontSize = 20.sp,
-//        lineHeight = 24.sp,
-//        letterSpacing = 0.sp
-//    )
-//
-//}
+}
