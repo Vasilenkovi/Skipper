@@ -21,8 +21,8 @@ import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
 import com.example.skipperproject.ui.theme.MobileTextStyles
 import com.example.skipperproject.ui.theme.SkipperColors
-import com.example.skipperproject.ui.theme.SkipperDimensions
 import com.example.skipperproject.ui.theme.SkipperProjectTheme
+import com.example.skipperproject.CommonUI.CustomTextField
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,14 +89,14 @@ fun LoginHeader(onClick: () -> Unit) {
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = SkipperColors.mainYellow,
-            contentColor = Color.Black // Цвет текста на жёлтом фоне
+            contentColor = Color.Black
         ),
         shape = RoundedCornerShape(8.dp),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = stringResource(R.string.login_title),
-            style = MobileTextStyles.ButtonsText, //
+            style = MobileTextStyles.ButtonsText
         )
     }
 }
@@ -157,13 +157,13 @@ fun ForgotPassword(interactionSource: MutableInteractionSource, onClick: () -> U
         text = stringResource(R.string.forgot_password),
         style = MaterialTheme.typography.bodySmall,
         textDecoration = TextDecoration.Underline,
-        modifier = Modifier.clickable{}
+        modifier = Modifier
             .padding(start = 4.dp)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
             ) {
-                onClick()//сюда вставить действие
+                onClick()
             }
     )
 }
@@ -188,30 +188,6 @@ fun RegistrationFooter(interactionSource: MutableInteractionSource, onRegisterCl
             }
         )
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun CustomTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier,
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
-            disabledContainerColor = Color.White,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-        ),
-        shape = RoundedCornerShape(SkipperDimensions.inputFieldRound),
-        singleLine = true,
-        textStyle = MobileTextStyles.HintText
-    )
 }
 
 @Preview(showSystemUi = true)

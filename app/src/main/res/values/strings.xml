@@ -11,4 +11,13 @@
     <string name="forgot_password">Забыли пароль?</string>
     <string name="no_account">Нет аккаунта?</string>
     <string name="register">Зарегистрируйтесь</string>
+
+    <string name="registration_title">Регистрация</string>
+    <string name="email_label_numbered">1 Адрес электронной почты</string>
+    <string name="create_password_label">2 Придумайте пароль</string>
+    <string name="repeat_password_label">3 Повторите пароль</string>
+    <string name="confirm_email_button">Подтвердить почту</string>
+    <string name="resend_email">Отправить письмо повторно</string>
+    <string name="have_account">Есть аккаунт?</string>
+    <string name="login_link">Войти</string>
 </resources>
