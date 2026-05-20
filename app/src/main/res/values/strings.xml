@@ -4,4 +4,11 @@
     <string name="ready_to_help">Мы готовы\nпомочь!</string>
     <string name="find_mentor">Найди своего\nментора</string>
     <string name="start_search">Начать поиск</string>
+    
+    <string name="login_title">Войти в аккаунт</string>
+    <string name="email_label">Адрес электронной почты</string>
+    <string name="password_label">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="no_account">Нет аккаунта?</string>
+    <string name="register">Зарегистрируйтесь</string>
 </resources>

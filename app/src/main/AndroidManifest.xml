@@ -11,14 +11,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SkipperProject">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.SkipperProject">
-        </activity>
+        
 
-        <activity android:name=".MentorInterface.MainScreenActivity"
+
+        <activity android:name=".CommonUI.MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +22,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".CommonUI.LoginActivity"
+            android:exported="true" />
+
+
+        <activity android:name=".CommonUI.TestActivity"
+            android:exported="true" />
         <activity android:name=".MentorInterface.AccountActivity"/>
 
         <activity android:name=".MentorInterface.ChatsActivity"/>

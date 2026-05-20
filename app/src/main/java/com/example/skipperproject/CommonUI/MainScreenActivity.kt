@@ -1,9 +1,8 @@
-package com.example.skipperproject.MentorInterface
+package com.example.skipperproject.CommonUI
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.Dimension
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -16,7 +15,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
-import com.example.skipperproject.ui.SkipperScreen
 import com.example.skipperproject.ui.theme.SkipperColors
 import com.example.skipperproject.ui.theme.SkipperDimensions
 import com.example.skipperproject.ui.theme.SkipperProjectTheme
