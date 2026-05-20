@@ -85,18 +85,15 @@ fun LoginScreen() {
 
 @Composable
 fun LoginHeader(onClick: () -> Unit) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = SkipperColors.mainYellow,
-            contentColor = Color.Black
-        ),
-        shape = RoundedCornerShape(8.dp),
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+    Surface(
+        color = SkipperColors.mainYellow,
+        shape = RoundedCornerShape(8.dp)
     ) {
         Text(
             text = stringResource(R.string.login_title),
-            style = MobileTextStyles.ButtonsText
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            style = MobileTextStyles.ButtonsText,
+            color = Color.Black
         )
     }
 }
@@ -106,8 +103,7 @@ fun EmailInput(value: String, onValueChange: (String) -> Unit) {
     Column {
         Text(
             text = stringResource(R.string.email_label),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold
+            style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
         CustomTextField(

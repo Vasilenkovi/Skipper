@@ -113,8 +113,7 @@ fun NumberedInputSection(label: String, value: String, onValueChange: (String) -
     Column {
         Text(
             text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.bodyLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
         CustomTextField(
