@@ -72,6 +72,39 @@ fun Route.slotRoutes(slotService: SlotService) {
                     call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка сервера"))
                 }
             }
+            post("/{id}/accept") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val slotId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+
+                    val errorMessage = slotService.acceptSlotRequest(userId, slotId)
+
+                    if (errorMessage == null) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Заявка принята, ожидается оплата"))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError)
+                }
+            }
+
+            post("/{id}/reject") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val slotId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+
+                    val errorMessage = slotService.rejectSlotRequest(userId, slotId)
+
+                    if (errorMessage == null) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Заявка отклонена, слот снова свободен"))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError)
+                }
+            }
 
             get {
                 try {
@@ -95,6 +128,17 @@ fun Route.slotRoutes(slotService: SlotService) {
                     val availableSlots = slotService.getAvailableSlotsForMentor(mentorId)
                     call.respond(HttpStatusCode.OK, availableSlots)
 
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения расписания"))
+                }
+            }
+
+            get("/my") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val mySlots = slotService.getSlotsForMentee(userId)
+
+                    call.respond(HttpStatusCode.OK, mySlots)
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения расписания"))
                 }

@@ -2,6 +2,7 @@ package com.example.features.slots
 
 import com.example.core.dbQuery
 import kotlinx.coroutines.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.less
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.update
 import java.time.LocalDateTime
@@ -13,11 +14,11 @@ object SlotCleanupWorker {
         job = CoroutineScope(Dispatchers.IO).launch {
             while (isActive) {
                 try {
-                    cleanupZombieSlots()
+                    cleanupExpiredRequests()
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-                delay(60_000L)
+                delay(3600_000L)
             }
         }
     }
@@ -26,18 +27,18 @@ object SlotCleanupWorker {
         job?.cancel()
     }
 
-    private suspend fun cleanupZombieSlots() = dbQuery {
-        val thresholdTime = LocalDateTime.now().minusMinutes(15)
+    private suspend fun cleanupExpiredRequests() = dbQuery {
+        val thresholdTime = LocalDateTime.now().minusHours(24)
 
         val updatedCount = Slots.update({
-            (Slots.status eq "PENDING") and (Slots.updatedAt less thresholdTime)
+            (Slots.status eq "REQUESTED") and (Slots.updatedAt less thresholdTime)
         }) {
             it[status] = "FREE"
             it[menteeId] = null
         }
 
         if (updatedCount > 0) {
-            println("Очищено зависших слотов: $updatedCount")
+            println("[Worker] Аннулировано просроченных заявок менторов: $updatedCount")
         }
     }
 }

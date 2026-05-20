@@ -112,20 +112,71 @@ class SlotService {
                 ?: return@dbQuery "Слот не найден"
 
             if (slotRow[Slots.status] != "FREE") {
-                return@dbQuery "Этот слот уже забронирован кем-то другим"
+                return@dbQuery "Этот слот уже занят или недоступен"
             }
 
-            val updatedRows = Slots.update({ Slots.id eq slotUuid }) {
-                it[status] = "PENDING"
+            Slots.update({ Slots.id eq slotUuid }) {
+                it[status] = "REQUESTED"
                 it[menteeId] = userUuid
                 it[updatedAt] = LocalDateTime.now()
             }
-
-            if (updatedRows > 0) return@dbQuery null else return@dbQuery "Не удалось забронировать"
-
+            return@dbQuery null
         } catch (e: Exception) {
             e.printStackTrace()
-            return@dbQuery "Неверный формат ID"
+            return@dbQuery "Неверный формат ID слота"
+        }
+    }
+
+    suspend fun acceptSlotRequest(userIdFromToken: String, slotId: String): String? = dbQuery {
+        try {
+            val userUuid = UUID.fromString(userIdFromToken)
+            val slotUuid = UUID.fromString(slotId)
+
+            val expertProfile = ExpertProfiles.select { ExpertProfiles.userId eq userUuid }.singleOrNull()
+                ?: return@dbQuery "Профиль ментора не найден"
+            val realProfileId = expertProfile[ExpertProfiles.id].value
+
+            val slotRow = Slots.select { Slots.id eq slotUuid }.singleOrNull()
+                ?: return@dbQuery "Слот не найден"
+
+            if (slotRow[Slots.expertId].value != realProfileId) return@dbQuery "Это не ваш слот"
+            if (slotRow[Slots.status] != "REQUESTED") return@dbQuery "Слот не находится в статусе заявки"
+
+            Slots.update({ Slots.id eq slotUuid }) {
+                it[status] = "BOOKED"
+                it[updatedAt] = LocalDateTime.now()
+            }
+            return@dbQuery null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@dbQuery "Ошибка сервера"
+        }
+    }
+
+    suspend fun rejectSlotRequest(userIdFromToken: String, slotId: String): String? = dbQuery {
+        try {
+            val userUuid = UUID.fromString(userIdFromToken)
+            val slotUuid = UUID.fromString(slotId)
+
+            val expertProfile = ExpertProfiles.select { ExpertProfiles.userId eq userUuid }.singleOrNull()
+                ?: return@dbQuery "Профиль ментора не найден"
+            val realProfileId = expertProfile[ExpertProfiles.id].value
+
+            val slotRow = Slots.select { Slots.id eq slotUuid }.singleOrNull()
+                ?: return@dbQuery "Слот не найден"
+
+            if (slotRow[Slots.expertId].value != realProfileId) return@dbQuery "Это не ваш слот"
+            if (slotRow[Slots.status] != "REQUESTED") return@dbQuery "Слот не находится в статусе заявки"
+
+            Slots.update({ Slots.id eq slotUuid }) {
+                it[status] = "FREE"
+                it[menteeId] = null
+                it[updatedAt] = LocalDateTime.now()
+            }
+            return@dbQuery null
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@dbQuery "Ошибка сервера"
         }
     }
 
@@ -181,6 +232,33 @@ class SlotService {
         } catch (e: Exception) {
             e.printStackTrace()
             return@dbQuery "Неверный формат ID слота"
+        }
+    }
+
+    suspend fun getSlotsForMentee(userIdFromToken: String): List<MenteeSlotResponse> = dbQuery {
+        try {
+            val userUuid = UUID.fromString(userIdFromToken)
+
+            (Slots innerJoin ExpertProfiles)
+                .innerJoin(
+                    otherTable = Users,
+                    onColumn = { ExpertProfiles.userId },
+                    otherColumn = { Users.id }
+                )
+                .select { Slots.menteeId eq userUuid }
+                .orderBy(Slots.startTime to SortOrder.ASC)
+                .map { row ->
+                    MenteeSlotResponse(
+                        id = row[Slots.id].value.toString(),
+                        mentorName = row[Users.fullName],
+                        startTime = row[Slots.startTime].toString(),
+                        endTime = row[Slots.endTime].toString(),
+                        status = row[Slots.status]
+                    )
+                }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
         }
     }
 }

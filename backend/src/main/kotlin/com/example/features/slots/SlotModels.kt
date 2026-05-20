@@ -18,3 +18,11 @@ data class SlotResponse(
     val endTime: String,
     val status: String
 )
+@Serializable
+data class MenteeSlotResponse(
+    val id: String,
+    val mentorName: String,
+    val startTime: String,
+    val endTime: String,
+    val status: String
+)
