@@ -1,4 +1,4 @@
-package com.example.skipperproject.CommonUI
+package com.example.skipperproject.Tools
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,10 +10,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.skipperproject.ui.theme.SkipperProjectTheme
 
 class TestActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

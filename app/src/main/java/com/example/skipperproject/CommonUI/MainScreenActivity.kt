@@ -15,6 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
+import com.example.skipperproject.Tools.SkipperScreen
 import com.example.skipperproject.ui.theme.SkipperColors
 import com.example.skipperproject.ui.theme.SkipperDimensions
 import com.example.skipperproject.ui.theme.SkipperProjectTheme

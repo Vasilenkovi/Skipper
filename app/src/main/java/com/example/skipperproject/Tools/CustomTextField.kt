@@ -1,4 +1,4 @@
-package com.example.skipperproject.CommonUI
+package com.example.skipperproject.Tools
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api

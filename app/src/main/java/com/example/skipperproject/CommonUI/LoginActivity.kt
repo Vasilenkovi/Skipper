@@ -22,7 +22,8 @@ import com.example.skipperproject.R
 import com.example.skipperproject.ui.theme.MobileTextStyles
 import com.example.skipperproject.ui.theme.SkipperColors
 import com.example.skipperproject.ui.theme.SkipperProjectTheme
-import com.example.skipperproject.CommonUI.CustomTextField
+import com.example.skipperproject.Tools.CustomTextField
+import com.example.skipperproject.Tools.SkipperScreen
 
 class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

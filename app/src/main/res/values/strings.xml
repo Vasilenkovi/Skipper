@@ -20,4 +20,8 @@
     <string name="resend_email">Отправить письмо повторно</string>
     <string name="have_account">Есть аккаунт?</string>
     <string name="login_link">Войти</string>
+
+    <string name="email_confirmed_title">Почта успешно\nподтверждена!</string>
+    <string name="email_confirmed_subtitle">Осталось лишь только познакомиться с вами поближе</string>
+    <string name="continue_button">Продолжить</string>
 </resources>

@@ -49,10 +49,6 @@ object MobileTextStyles{
         letterSpacing = 0.sp
     )
 
-//    val HintTextUnderlined = HintText.copy(
-//        textDecoration = TextDecoration.Underline
-//    )
-
     val HelpButtonSmall = TextStyle(
         fontFamily = SegoeUI,
         fontWeight = FontWeight.SemiBold,
@@ -81,7 +77,7 @@ object MobileTextStyles{
         fontFamily = SegoeUI,
         fontWeight = FontWeight.SemiBold,
         fontSize = 16.sp,
-        lineHeight = 46.sp,
+        lineHeight = 0.sp,
         letterSpacing = 0.sp
     )
 
@@ -92,5 +88,4 @@ object MobileTextStyles{
         lineHeight = 46.sp,
         letterSpacing = 0.sp
     )
-
 }

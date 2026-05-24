@@ -18,10 +18,10 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
-import com.example.skipperproject.CommonUI.SkipperScreen
+import com.example.skipperproject.Tools.CustomTextField
+import com.example.skipperproject.Tools.SkipperScreen
 import com.example.skipperproject.ui.theme.MobileTextStyles
 import com.example.skipperproject.ui.theme.SkipperColors
-import com.example.skipperproject.ui.theme.SkipperDimensions
 import com.example.skipperproject.ui.theme.SkipperProjectTheme
 
 class CreateAccountActivity : ComponentActivity() {
