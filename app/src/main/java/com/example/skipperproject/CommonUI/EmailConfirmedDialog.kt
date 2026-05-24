@@ -45,54 +45,72 @@ fun EmailConfirmedContent(
     ) {
         Column(
             modifier = Modifier
-                .padding(horizontal = SkipperDimensions.dialogInterPaddingH,
-                    vertical = SkipperDimensions.dialogInterPaddingV),
+                .padding(
+                    horizontal = SkipperDimensions.dialogInterPaddingH,
+                    vertical = SkipperDimensions.dialogInterPaddingV
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.email_confirmed_title),
-                style = MobileTextStyles.ButtonsText.copy(
-                    fontSize = 24.sp,
-                    lineHeight = 28.sp,
-                    textAlign = TextAlign.Center
-                ),
-                color = Color.Black
-            )
+            EmailConfirmedTitle()
 
             Spacer(modifier = Modifier.height(SkipperDimensions.bubbleVertSpace))
 
-            Text(
-                text = stringResource(R.string.email_confirmed_subtitle),
-                style = MobileTextStyles.QuestionText.copy(
-                    textAlign = TextAlign.Center,
-                    lineHeight = 20.sp
-
-                ),
-                color = Color.Black
-            )
+            EmailConfirmedSubtitle()
 
             Spacer(modifier = Modifier.height(SkipperDimensions.dialogPadding))
 
-            Button(
-                onClick = onContinue,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = SkipperColors.mainYellow,
-                    contentColor = Color.Black
-                ),
-                shape = RoundedCornerShape(SkipperDimensions.buttonRound),
-                modifier = Modifier,
-                contentPadding = PaddingValues(horizontal = 6.dp, vertical = 3.5.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.continue_button),
-                    style = MobileTextStyles.QuestionText.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    modifier = Modifier.width(168.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
+            ContinueButton(onClick = onContinue)
         }
+    }
+}
+
+@Composable
+private fun EmailConfirmedTitle() {
+    Text(
+        text = stringResource(R.string.email_confirmed_title),
+        style = MobileTextStyles.ButtonsText.copy(
+            fontSize = 24.sp,
+            lineHeight = 28.sp,
+            textAlign = TextAlign.Center
+        ),
+        color = Color.Black
+    )
+}
+
+@Composable
+private fun EmailConfirmedSubtitle() {
+    Text(
+        text = stringResource(R.string.email_confirmed_subtitle),
+        style = MobileTextStyles.QuestionText.copy(
+            textAlign = TextAlign.Center,
+            lineHeight = 20.sp
+        ),
+        color = Color.Black
+    )
+}
+
+@Composable
+private fun ContinueButton(onClick: () -> Unit) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = SkipperColors.mainYellow,
+            contentColor = Color.Black
+        ),
+        shape = RoundedCornerShape(SkipperDimensions.buttonRound),
+        contentPadding = PaddingValues(horizontal = 6.dp, vertical = 3.5.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.continue_button),
+            style = MobileTextStyles.QuestionText.copy(
+                fontWeight = FontWeight.Bold,
+                platformStyle = PlatformTextStyle(
+                    includeFontPadding = false
+                )
+            ),
+            modifier = Modifier.width(168.dp),
+            textAlign = TextAlign.Center,
+        )
     }
 }
 
@@ -100,10 +118,9 @@ fun EmailConfirmedContent(
 @Composable
 fun EmailConfirmedDialogPreview() {
     SkipperProjectTheme {
-        // Оборачиваем в Box, чтобы имитировать центр экрана
         Box(
             modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter
+            contentAlignment = Alignment.Center
         ) {
             EmailConfirmedContent(onContinue = {})
         }
