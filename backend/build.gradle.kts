@@ -43,6 +43,7 @@ detekt {
 
 
 dependencies {
+    implementation("io.ktor:ktor-server-status-pages")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("org.jetbrains.exposed:exposed-core:0.47.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.47.0")

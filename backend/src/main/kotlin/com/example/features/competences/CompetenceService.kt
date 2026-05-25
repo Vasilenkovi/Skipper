@@ -2,10 +2,15 @@ package com.example.features.competences
 
 import com.example.core.dbQuery
 import com.example.features.users.ExpertProfiles
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import java.util.*
+import java.util.UUID
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException")
 class CompetenceService {
 
     suspend fun addCompetenceToExpert(userIdFromToken: String, tagName: String): Boolean {
@@ -48,8 +53,9 @@ class CompetenceService {
                 }
 
                 return@dbQuery true
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } catch (e: IllegalArgumentException) {
+                false
+            } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
                 false
             }
         }
@@ -74,8 +80,9 @@ class CompetenceService {
             }
 
             deletedRows > 0
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (e: IllegalArgumentException) {
+            false
+        } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
             false
         }
     }

@@ -1,3 +1,4 @@
+@file:Suppress("WildcardImport")
 package com.example
 
 import com.example.features.slots.SlotCleanupWorker

@@ -7,7 +7,7 @@ import org.jetbrains.exposed.sql.Table
 
 
 object Competences : IntIdTable("competences") {
-    val name = varchar("name",255).uniqueIndex()
+    val name = varchar("name", 255).uniqueIndex()
 }
 
 object ExpertCompetences : Table("expert_competences") {

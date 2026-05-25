@@ -33,6 +33,7 @@ data class MentorCardResponse(
     val fullName: String,
     val hourlyRate: Double,
     val averageRating: Float,
+    val contactInfo: String?,
     val experienceDescription: String
 )
 
@@ -46,6 +47,7 @@ data class DetailedMentorResponse(
     val id: String,
     val fullName: String,
     val email: String,
+    val contactInfo: String?,
     val education: String,
     val experienceDescription: String,
     val hourlyRate: Double,
@@ -69,5 +71,15 @@ data class UpdateProfileRequest(
     val newFullName: String? = null,
     val newExperienceDescription: String? = null,
     val newHourlyRate: String? = null,
-    val newEducation: String? = null
+    val newEducation: String? = null,
+    val contactInfo: String? = null
+)
+
+@Serializable
+data class PaginatedResponse<T>(
+    val items: List<T>,
+    val totalCount: Long,
+    val page: Int,
+    val pageSize: Int,
+    val totalPages: Int
 )

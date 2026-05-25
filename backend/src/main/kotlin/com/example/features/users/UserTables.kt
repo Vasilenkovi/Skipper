@@ -19,4 +19,5 @@ object ExpertProfiles : UUIDTable("expert_profiles") {
     val experienceDescription = text("experience_description")
     val hourlyRate = decimal("hourly_rate", 10, 2)
     val averageRating = float("average_rating").default(0F)
+    val reviewsCount = integer("reviews_count").default(0)
 }

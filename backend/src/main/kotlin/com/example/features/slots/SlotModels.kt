@@ -16,13 +16,23 @@ data class SlotResponse(
     val menteeEmail: String?,
     val startTime: String,
     val endTime: String,
+    val meetingLink: String? = null,
+    val priceAtBooking: Double? = null,
     val status: String
 )
+
 @Serializable
 data class MenteeSlotResponse(
     val id: String,
     val mentorName: String,
     val startTime: String,
     val endTime: String,
+    val meetingLink: String? = null,
+    val priceAtBooking: Double? = null,
     val status: String
+)
+
+@Serializable
+data class AttachMeetingLinkRequest(
+    val meetingLink: String
 )

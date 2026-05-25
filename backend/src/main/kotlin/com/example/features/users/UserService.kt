@@ -3,12 +3,18 @@ package com.example.features.users
 import com.example.core.dbQuery
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.insertAndGetId
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.innerJoin
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.mindrot.jbcrypt.BCrypt
 
 import java.util.*
 
+@Suppress("TooGenericExceptionCaught", "SwallowedException")
 class UserService {
 
     suspend fun registerUser(request: CreateUserRequest): UUID? {
@@ -34,28 +40,14 @@ class UserService {
                 }
 
                 newUserID
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
+                null
+            } catch (e: IllegalArgumentException) {
                 null
             }
         }
     }
 
-    suspend fun getAllMentors(): List<MentorCardResponse> {
-        return dbQuery {
-            (Users innerJoin ExpertProfiles)
-                .select { Users.role eq "Mentor" }
-                .map { row ->
-                    MentorCardResponse(
-                        id = row[Users.id].value.toString(),
-                        fullName = row[Users.fullName],
-                        hourlyRate = row[ExpertProfiles.hourlyRate].toDouble(),
-                        averageRating = row[ExpertProfiles.averageRating],
-                        experienceDescription = row[ExpertProfiles.experienceDescription].take(100)
-                    )
-                }
-        }
-    }
 
     suspend fun getMentorById(mentorID: String): DetailedMentorResponse? {
         return dbQuery {
@@ -84,6 +76,7 @@ class UserService {
                 experienceDescription = mentorRow[ExpertProfiles.experienceDescription],
                 hourlyRate = mentorRow[ExpertProfiles.hourlyRate].toDouble(),
                 averageRating = mentorRow[ExpertProfiles.averageRating],
+                contactInfo = mentorRow[Users.contactInfo],
                 competences = competencesList
             )
         }
@@ -105,25 +98,42 @@ class UserService {
         return@dbQuery null
     }
 
-    suspend fun updateExpertProfile(mentorID: String, updateProfileRequest: UpdateProfileRequest) {
-        return dbQuery {
-            val uuid = UUID.fromString(mentorID)
+    suspend fun updateUserProfile(userIdFromToken: String, request: UpdateProfileRequest): Boolean = dbQuery {
+        try {
+            val userUuid = UUID.fromString(userIdFromToken)
+            var usersUpdated = 0
+            var expertUpdated = 0
 
-            if (updateProfileRequest.newFullName != null) {
-                Users.update({ Users.id eq uuid }) {
-                    it[fullName] = updateProfileRequest.newFullName
+            if (!request.newFullName.isNullOrBlank() || request.contactInfo != null) {
+                usersUpdated = Users.update({ Users.id eq userUuid }) {
+                    if (!request.newFullName.isNullOrBlank()) {
+                        it[Users.fullName] = request.newFullName
+                    }
+                    if (request.contactInfo != null) {
+                        it[Users.contactInfo] = request.contactInfo
+                    }
                 }
             }
 
-            ExpertProfiles.update({ ExpertProfiles.userId eq uuid }) {
-                updateProfileRequest.newEducation?.let { safeEdu -> it[education] = safeEdu }
-                updateProfileRequest.newExperienceDescription?.let { safeExperienceDescription ->
-                    it[experienceDescription] = safeExperienceDescription
-                }
-                updateProfileRequest.newHourlyRate?.let { safeHourlyRate ->
-                    it[hourlyRate] = safeHourlyRate.toBigDecimal()
+            if (request.newExperienceDescription != null ||
+                request.newHourlyRate != null || request.newEducation != null) {
+                expertUpdated = ExpertProfiles.update({ ExpertProfiles.userId eq userUuid }) {
+                    if (request.newExperienceDescription != null) {
+                        it[ExpertProfiles.experienceDescription] = request.newExperienceDescription
+                    }
+                    if (request.newHourlyRate != null) {
+                        it[ExpertProfiles.hourlyRate] = request.newHourlyRate.toBigDecimal()
+                    }
+                    if (request.newEducation != null) {
+                        it[ExpertProfiles.education] = request.newEducation
+                    }
                 }
             }
+            usersUpdated > 0 || expertUpdated > 0
+        } catch (e: IllegalArgumentException) {
+            false
+        } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
+            false
         }
     }
 
@@ -148,9 +158,51 @@ class UserService {
                 return@dbQuery true
             }
             false
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (e: IllegalArgumentException) {
             false
+        } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
+            false
+        }
+    }
+
+    suspend fun getMentors(page: Int, pageSize: Int): PaginatedResponse<MentorCardResponse> {
+        return dbQuery {
+            val query = (Users innerJoin ExpertProfiles)
+                .select { Users.role eq "Mentor" }
+
+            val totalCount = query.count()
+            val totalPages = ((totalCount + pageSize - 1) / pageSize).toInt()
+
+            val offset = ((page - 1) * pageSize).toLong()
+
+            val items = query
+                .limit(pageSize, offset)
+                .map { row ->
+                    MentorCardResponse(
+                        id = row[Users.id].value.toString(),
+                        fullName = row[Users.fullName],
+                        hourlyRate = row[ExpertProfiles.hourlyRate].toDouble(),
+                        averageRating = row[ExpertProfiles.averageRating],
+                        contactInfo = row[Users.contactInfo],
+                        experienceDescription = row[ExpertProfiles.experienceDescription].take(100)
+                    )
+                }
+
+            PaginatedResponse(
+                items = items,
+                totalCount = totalCount,
+                page = page,
+                pageSize = pageSize,
+                totalPages = totalPages
+            )
+        }
+    }
+
+    suspend fun updateAvatarUrl(userId: String, photoUrl: String): Boolean {
+        return dbQuery {
+            Users.update({ Users.id eq UUID.fromString(userId) }) {
+                it[Users.photoUrl] = photoUrl
+            } > 0
         }
     }
 }

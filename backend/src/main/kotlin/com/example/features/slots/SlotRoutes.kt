@@ -1,12 +1,20 @@
+
 package com.example.features.slots
 
-import io.ktor.http.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import com.example.core.ErrorResponse
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 
+@Suppress("LongMethod", "CyclomaticComplexMethod", "TooGenericExceptionCaught", "SwallowedException")
 fun Route.slotRoutes(slotService: SlotService) {
     route("/api/slots") {
         authenticate {
@@ -16,7 +24,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                     val slotId = call.parameters["id"]
 
                     if (slotId == null) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Отсутствует ID слота"))
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                        )
                         return@post
                     }
 
@@ -25,10 +36,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                     if (errorMessage == null) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Слот успешно забронирован!"))
                     } else {
-                        call.respond(HttpStatusCode.Conflict, mapOf("error" to errorMessage))
+                        call.respond(HttpStatusCode.Conflict, ErrorResponse(error = errorMessage, code = 409))
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неизвестная ошибка"))
+                    call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = "Неизвестная ошибка", code = 400))
                 }
             }
 
@@ -42,13 +53,16 @@ fun Route.slotRoutes(slotService: SlotService) {
                     if (errorMessage == null) {
                         call.respond(HttpStatusCode.Created, mapOf("message" to "Слот на 1 час успешно создан"))
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     call.respond(
                         HttpStatusCode.BadRequest,
-                        mapOf("error" to "Неверный формат даты. Ожидался ISO 8601 (например: 2026-06-01T12:00:00)")
+                        ErrorResponse(
+                            error = "Неверный формат даты. Ожидался ISO 8601 (например: 2026-06-01T12:00:00)",
+                            code = 400
+                        )
                     )
                 }
             }
@@ -57,7 +71,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                 try {
                     val slotId = call.parameters["id"]
                     if (slotId == null) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Отсутствует ID слота"))
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                        )
                         return@post
                     }
 
@@ -66,43 +83,134 @@ fun Route.slotRoutes(slotService: SlotService) {
                     if (errorMessage == null) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Оплата прошла успешно! Слот забронирован."))
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка сервера"))
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
                 }
             }
+
             post("/{id}/accept") {
                 try {
                     val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                    val slotId = call.parameters["id"] ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                    )
 
                     val errorMessage = slotService.acceptSlotRequest(userId, slotId)
 
                     if (errorMessage == null) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Заявка принята, ожидается оплата"))
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError)
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
                 }
             }
 
             post("/{id}/reject") {
                 try {
                     val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                    val slotId = call.parameters["id"] ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                    )
 
                     val errorMessage = slotService.rejectSlotRequest(userId, slotId)
 
                     if (errorMessage == null) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Заявка отклонена, слот снова свободен"))
                     } else {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to errorMessage))
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError)
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
+                }
+            }
+
+            post("/{id}/complete") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val slotId = call.parameters["id"] ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                    )
+
+                    val errorMessage = slotService.completeSlot(userId, slotId)
+
+                    if (errorMessage == null) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Занятие успешно завершено!"))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
+                    }
+                } catch (e: Exception) {
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
+                }
+            }
+
+            post("/{slotId}/cancel") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+
+                    val slotId = call.parameters["slotId"] ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Не указан ID слота", code = 400)
+                    )
+
+                    val errorMessage = slotService.cancelSlotByMentee(userId, slotId)
+
+                    if (errorMessage == null) {
+                        call.respond(
+                            HttpStatusCode.OK,
+                            mapOf("message" to "Бронь успешно отменена, слот снова свободен")
+                        )
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
+                }
+            }
+
+            post("/{id}/link") {
+                try {
+                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val slotId = call.parameters["id"] ?: return@post call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                    )
+                    val request = call.receive<AttachMeetingLinkRequest>()
+
+                    val errorMessage = slotService.attachMeetingLink(userId, slotId, request.meetingLink)
+
+                    if (errorMessage == null) {
+                        call.respond(HttpStatusCode.OK, mapOf("message" to "Ссылка на созвон успешно сохранена!"))
+                    } else {
+                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
+                    }
+                } catch (e: Exception) {
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                    )
                 }
             }
 
@@ -113,7 +221,10 @@ fun Route.slotRoutes(slotService: SlotService) {
 
                     call.respond(HttpStatusCode.OK, slots)
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения списка слотов"))
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка получения списка слотов", code = 500)
+                    )
                 }
             }
 
@@ -121,7 +232,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                 try {
                     val mentorId = call.parameters["mentorId"]
                     if (mentorId == null) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Отсутствует ID ментора"))
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID ментора", code = 400)
+                        )
                         return@get
                     }
 
@@ -129,7 +243,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                     call.respond(HttpStatusCode.OK, availableSlots)
 
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения расписания"))
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка получения расписания", code = 500)
+                    )
                 }
             }
 
@@ -140,7 +257,10 @@ fun Route.slotRoutes(slotService: SlotService) {
 
                     call.respond(HttpStatusCode.OK, mySlots)
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Ошибка получения расписания"))
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка получения расписания", code = 500)
+                    )
                 }
             }
 
@@ -150,7 +270,10 @@ fun Route.slotRoutes(slotService: SlotService) {
                     val slotId = call.parameters["id"]
 
                     if (slotId == null) {
-                        call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Отсутствует ID слота"))
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                        )
                         return@delete
                     }
 
@@ -161,11 +284,18 @@ fun Route.slotRoutes(slotService: SlotService) {
                     } else {
                         call.respond(
                             HttpStatusCode.NotFound,
-                            mapOf("error" to "Слот не найден, не принадлежит вам или уже заблокирован/оплачен (статус не FREE)")
+                            ErrorResponse(
+                                error = "Слот не найден, не принадлежит вам или " +
+                                    "уже заблокирован/оплачен (статус не FREE)",
+                                code = 404
+                            )
                         )
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный формат ID слота"))
+                    call.respond(
+                        HttpStatusCode.BadRequest,
+                        ErrorResponse(error = "Неверный формат ID слота", code = 400)
+                    )
                 }
             }
         }

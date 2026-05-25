@@ -1,20 +1,27 @@
+@file:Suppress("WildcardImport")
 package com.example.features.competences
 
-import io.ktor.http.*
-import io.ktor.server.auth.*
-import io.ktor.server.auth.jwt.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import com.example.core.ErrorResponse
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.delete
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
+import io.ktor.server.routing.route
 
+@Suppress("LongMethod", "TooGenericExceptionCaught", "SwallowedException")
 fun Route.competenceRoutes(competenceService: CompetenceService) {
     route("/api/competences") {
         get("/") {
 
         }
+
         authenticate {
-
-
             post("/add-to-expert") {
                 try {
                     val expertId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
@@ -22,8 +29,8 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
 
                     if (request.tagName.isBlank()) {
                         call.respond(
-                            status = HttpStatusCode.BadRequest,
-                            message = mapOf("error" to "Название навыка не может быть пустым")
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Название навыка не может быть пустым", code = 400)
                         )
                         return@post
                     }
@@ -38,11 +45,11 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
                     } else {
                         call.respond(
                             HttpStatusCode.Conflict,
-                            mapOf("error" to "Не удалось добавить навык. Возможно, он уже привязан.")
+                            ErrorResponse(error = "Не удалось добавить навык. Возможно, он уже привязан.", code = 409)
                         )
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный формат данных"))
+                    call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = "Неверный формат данных", code = 400))
                 }
             }
 
@@ -54,7 +61,7 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
                     if (request.tagName.isBlank()) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            mapOf("error" to "Название навыка не может быть пустым")
+                            ErrorResponse(error = "Название навыка не может быть пустым", code = 400)
                         )
                         return@delete
                     }
@@ -67,10 +74,13 @@ fun Route.competenceRoutes(competenceService: CompetenceService) {
                     if (success) {
                         call.respond(HttpStatusCode.OK, mapOf("message" to "Навык успешно удален из профиля"))
                     } else {
-                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Навык или профиль не найден"))
+                        call.respond(
+                            HttpStatusCode.NotFound,
+                            ErrorResponse(error = "Навык или профиль не найден", code = 404)
+                        )
                     }
                 } catch (e: Exception) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный формат данных"))
+                    call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = "Неверный формат данных", code = 400))
                 }
             }
         }

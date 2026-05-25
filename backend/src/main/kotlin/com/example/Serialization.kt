@@ -1,3 +1,4 @@
+@file:Suppress("WildcardImport")
 package com.example
 
 import io.ktor.serialization.kotlinx.json.*
