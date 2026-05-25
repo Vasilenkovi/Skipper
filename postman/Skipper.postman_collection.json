@@ -1,0 +1,683 @@
+{
+  "info": {
+    "_postman_id": "ce26f42f-24f3-415b-b5b7-c2aa08171542",
+    "name": "api_test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "34713892"
+  },
+  "item": [
+    {
+      "name": "1. Регистрация ментора",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"mentor@example.com\",\r\n  \"passwordHash\": \"password123\",\r\n  \"authProvider\": \"email\",\r\n  \"fullName\": \"Иван Экспертов\",\r\n  \"role\": \"Mentor\",\r\n  \"hourlyRate\": \"2500.0\",\r\n  \"experienceDescription\": \"Более 5 лет коммерческого опыта разработки бэкенда на Kotlin и Ktor.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "2. Регистрация менти",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"mentee@example.com\",\r\n  \"passwordHash\": \"password123\",\r\n  \"authProvider\": \"email\",\r\n  \"fullName\": \"Алексей Новичков\",\r\n  \"role\": \"Mentee\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/register",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. Вход за ментора",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"mentor@example.com\",\r\n  \"passwordHash\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. Вход за менти",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"mentee@example.com\",\r\n  \"passwordHash\": \"password123\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. Получение своего профиля",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/users/profile",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "6. Частичное обновление профиля (PATCH)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"newFullName\": \"Иван Экспертов\",\r\n  \"newHourlyRate\": \"3000.0\",\r\n  \"newExperienceDescription\": \"Обновленное описание: эксперт по микросервисам и высоконагруженным системам на Kotlin.\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/profile",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "profile"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "8. Добавление навыка (Компетенции)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tagName\": \"Kotlin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/competences/add-to-expert",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "competences",
+            "add-to-expert"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "9. Удаление навыка",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"tagName\": \"Kotlin\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/competences/remove-from-expert",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "competences",
+            "remove-from-expert"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "10. Создание слота (Токен Ментора)",
+      "protocolProfileBehavior": {
+        "disabledSystemHeaders": {}
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"startTime\": \"2026-06-01T12:00:00\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "11. Каталог наставников с пагинацией (Можно любой токен)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTEE_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/users/mentors?page=1&limit=5",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "mentors"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "1"
+            },
+            {
+              "key": "limit",
+              "value": "5"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "12. Просмотр расписания Ментора (Токен Менти)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTEE_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/slots/mentor/e6bdf47b-d7f4-4023-80aa-464440fd11f0",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "mentor",
+            "e6bdf47b-d7f4-4023-80aa-464440fd11f0"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "13. Бронирование слота (Токен Менти)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTEE_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots/e64017df-d167-49b8-942d-a9ed02a300f6/book",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "e64017df-d167-49b8-942d-a9ed02a300f6",
+            "book"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "15. Подтверждение заявки (Токен Ментора)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots/e64017df-d167-49b8-942d-a9ed02a300f6/accept",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "e64017df-d167-49b8-942d-a9ed02a300f6",
+            "accept"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "16. Прикрепление ссылки на созвон (Токен Ментора)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"meetingLink\": \"https://telemost.yandex.ru/j/1234567890\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots/e64017df-d167-49b8-942d-a9ed02a300f6/link",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "e64017df-d167-49b8-942d-a9ed02a300f6",
+            "link"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "17. Завершение урока (Токен Ментора)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots/e64017df-d167-49b8-942d-a9ed02a300f6/complete",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "e64017df-d167-49b8-942d-a9ed02a300f6",
+            "complete"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "18. Оставление отзыва (Токен Менти)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTEE_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"rating\": 5,\r\n  \"comment\": \"Отличный ментор, всё объяснил понятным языком!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/reviews/e64017df-d167-49b8-942d-a9ed02a300f6",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "reviews",
+            "e64017df-d167-49b8-942d-a9ed02a300f6"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. Загрузка аватарки",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTOR_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "uuid": "df1674a1-7e00-4b24-9793-4d67028b5827",
+              "src": "/D:/загрузки/Telegram Desktop/photo_2_2026-04-22_11-31-21.jpg"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/avatar",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "avatar"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "14. Подтверждение оплаты (Токен Менти)",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{MENTEE_TOKEN}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/slots/10e4b83a-f0c1-4d4b-bb14-f2b49a7e0869/confirm-payment",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "slots",
+            "10e4b83a-f0c1-4d4b-bb14-f2b49a7e0869",
+            "confirm-payment"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
