@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:16-alpine
+    container_name: skipper-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-skipper_database}
+      POSTGRES_USER: ${POSTGRES_USER:-skipper_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-oM2dX_PI1U}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-skipper_admin} -d ${POSTGRES_DB:-skipper_database}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - skipper-network
+
+  # Ktor Backend Application
+  app:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: skipper-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # Application port
+      PORT: ${PORT:-8080}
+      
+      # Database connection (Exposed ORM + HikariCP)
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-skipper_database}
+      DB_USER: ${POSTGRES_USER:-skipper_admin}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-oM2dX_PI1U}
+      
+      # JWT Configuration
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production-please-use-secure-random-string}
+      JWT_ISSUER: ${JWT_ISSUER:-skipper-app}
+      JWT_EXPIRE: ${JWT_EXPIRE:-24h}
+      
+      # Application settings
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    ports:
+      - "8080:8080"
+    volumes:
+      - app_logs:/app/logs
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - skipper-network
+
+volumes:
+  postgres_data:
+    driver: local
+  app_logs:
+    driver: local
+
+networks:
+  skipper-network:
+    driver: bridge
