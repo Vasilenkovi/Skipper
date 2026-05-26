@@ -15,33 +15,33 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
-    fun init() {
-        val config =
-            HikariConfig().apply {
-                driverClassName = "org.postgresql.Driver"
-                jdbcUrl = "jdbc:postgresql://127.0.0.1:5433/skipper_database"
-                username = "skipper_admin"
-                password = "oM2dX_PI1U"
-                maximumPoolSize = 3
-                isAutoCommit = false
-                transactionIsolation = "TRANSACTION_REPEATABLE_READ"
-                validate()
-            }
+  fun init() {
+    val config =
+      HikariConfig().apply {
+        driverClassName = "org.postgresql.Driver"
+        jdbcUrl = "jdbc:postgresql://127.0.0.1:5433/skipper_database"
+        username = "skipper_admin"
+        password = "oM2dX_PI1U"
+        maximumPoolSize = 3
+        isAutoCommit = false
+        transactionIsolation = "TRANSACTION_REPEATABLE_READ"
+        validate()
+      }
 
-        val dataSource = HikariDataSource(config)
-        Database.connect(dataSource)
+    val dataSource = HikariDataSource(config)
+    Database.connect(dataSource)
 
-        transaction {
-            SchemaUtils.createMissingTablesAndColumns(
-                Users,
-                ExpertProfiles,
-                Competences,
-                ExpertCompetences,
-                Slots,
-                Reviews,
-            )
-        }
+    transaction {
+      SchemaUtils.createMissingTablesAndColumns(
+        Users,
+        ExpertProfiles,
+        Competences,
+        ExpertCompetences,
+        Slots,
+        Reviews,
+      )
     }
+  }
 }
 
 suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
