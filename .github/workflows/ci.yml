@@ -26,3 +26,16 @@ jobs:
       - name: Run ktlint & detekt
         run: ./gradlew ktlintCheck detekt --no-daemon
         working-directory: backend
+      - name: Upload Detekt Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+         name: detekt-report
+         path: backend/build/reports/detekt/detekt.html
+
+      - name: Upload Ktlint Report  
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+         name: ktlint-report
+         path: backend/build/reports/ktlint/
