@@ -5,7 +5,6 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
-
 object Competences : IntIdTable("competences") {
     val name = varchar("name", 255).uniqueIndex()
 }

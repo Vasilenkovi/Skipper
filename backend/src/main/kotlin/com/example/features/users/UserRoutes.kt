@@ -1,4 +1,5 @@
 @file:Suppress("WildcardImport")
+
 package com.example.features.users
 
 import com.example.core.ErrorResponse
@@ -27,16 +28,15 @@ import java.util.UUID
 
 @Suppress("LongMethod", "CyclomaticComplexMethod", "TooGenericExceptionCaught", "SwallowedException")
 fun Route.userRoutes(userService: UserService) {
-
     route("/api/users") {
-
         post("/register") {
             try {
                 val request = call.receive<CreateUserRequest>()
-                val validationError = validateRateAndDescription(
-                    request.hourlyRate,
-                    request.experienceDescription
-                )
+                val validationError =
+                    validateRateAndDescription(
+                        request.hourlyRate,
+                        request.experienceDescription,
+                    )
 
                 if (validationError != null) {
                     call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = validationError, code = 400))
@@ -48,26 +48,32 @@ fun Route.userRoutes(userService: UserService) {
                 if (userId != null) {
                     call.respond(
                         HttpStatusCode.Created,
-                        mapOf("user" to userId.toString(), "message" to "Пользователь успешно зарегистрирован")
+                        mapOf("user" to userId.toString(), "message" to "Пользователь успешно зарегистрирован"),
                     )
                 } else {
                     call.respond(
                         HttpStatusCode.Conflict,
-                        ErrorResponse(error = "Пользователь с таким email уже существует", code = 409)
+                        ErrorResponse(error = "Пользователь с таким email уже существует", code = 409),
                     )
                 }
             } catch (e: Exception) {
                 call.respond(
                     HttpStatusCode.BadRequest,
-                    ErrorResponse(error = "Неверный формат данных: ${e.localizedMessage}", code = 400)
+                    ErrorResponse(error = "Неверный формат данных: ${e.localizedMessage}", code = 400),
                 )
             }
         }
 
         get("/mentors") {
             try {
-                val page = call.request.queryParameters["page"]?.toIntOrNull()?.takeIf { it > 0 } ?: 1
-                val limit = call.request.queryParameters["limit"]?.toIntOrNull()?.takeIf { it > 0 } ?: 10
+                val page =
+                    call.request.queryParameters["page"]
+                        ?.toIntOrNull()
+                        ?.takeIf { it > 0 } ?: 1
+                val limit =
+                    call.request.queryParameters["limit"]
+                        ?.toIntOrNull()
+                        ?.takeIf { it > 0 } ?: 10
 
                 val paginatedMentors = userService.getMentors(page, limit)
                 call.respond(HttpStatusCode.OK, paginatedMentors)
@@ -75,7 +81,7 @@ fun Route.userRoutes(userService: UserService) {
                 e.printStackTrace()
                 call.respond(
                     HttpStatusCode.InternalServerError,
-                    ErrorResponse(error = "Ошибка получения списка менторов", code = 500)
+                    ErrorResponse(error = "Ошибка получения списка менторов", code = 500),
                 )
             }
         }
@@ -112,7 +118,7 @@ fun Route.userRoutes(userService: UserService) {
                 } else {
                     call.respond(
                         HttpStatusCode.Unauthorized,
-                        ErrorResponse(error = "Неверный email или пароль", code = 401)
+                        ErrorResponse(error = "Неверный email или пароль", code = 401),
                     )
                 }
             } catch (e: Exception) {
@@ -123,7 +129,12 @@ fun Route.userRoutes(userService: UserService) {
         authenticate {
             get("/profile") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val mentorProfile = userService.getMentorById(userId)
 
                     if (mentorProfile != null) {
@@ -131,26 +142,32 @@ fun Route.userRoutes(userService: UserService) {
                     } else {
                         call.respond(
                             HttpStatusCode.NotFound,
-                            ErrorResponse(error = "Профиль ментора не найден", code = 404)
+                            ErrorResponse(error = "Профиль ментора не найден", code = 404),
                         )
                     }
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка получения профиля", code = 500)
+                        ErrorResponse(error = "Ошибка получения профиля", code = 500),
                     )
                 }
             }
 
             put("/update-profile") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val request = call.receive<UpdateProfileRequest>()
 
-                    val validationError = validateRateAndDescription(
-                        request.newHourlyRate,
-                        request.newExperienceDescription
-                    )
+                    val validationError =
+                        validateRateAndDescription(
+                            request.newHourlyRate,
+                            request.newExperienceDescription,
+                        )
 
                     if (validationError != null) {
                         call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = validationError, code = 400))
@@ -163,7 +180,7 @@ fun Route.userRoutes(userService: UserService) {
                     } else {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Не удалось обновить профиль", code = 400)
+                            ErrorResponse(error = "Не удалось обновить профиль", code = 400),
                         )
                     }
                 } catch (e: Exception) {
@@ -173,7 +190,12 @@ fun Route.userRoutes(userService: UserService) {
 
             patch("/profile") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val request = call.receive<UpdateProfileRequest>()
 
                     val isUpdated = userService.updateUserProfile(userId, request)
@@ -183,49 +205,55 @@ fun Route.userRoutes(userService: UserService) {
                     } else {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Не удалось обновить профиль. Проверьте данные.", code = 400)
+                            ErrorResponse(error = "Не удалось обновить профиль. Проверьте данные.", code = 400),
                         )
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Внутренняя ошибка при обновлении профиля", code = 500)
+                        ErrorResponse(error = "Внутренняя ошибка при обновлении профиля", code = 500),
                     )
                 }
             }
 
             delete("/profile") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val success = userService.deleteExpertRole(userId)
 
                     if (success) {
                         call.respond(
                             HttpStatusCode.OK,
-                            mapOf("message" to "Вы больше не являетесь экспертом. Роль изменена на Менти.")
+                            mapOf("message" to "Вы больше не являетесь экспертом. Роль изменена на Менти."),
                         )
                     } else {
                         call.respond(
                             HttpStatusCode.NotFound,
-                            ErrorResponse(error = "Профиль эксперта не найден", code = 404)
+                            ErrorResponse(error = "Профиль эксперта не найден", code = 404),
                         )
                     }
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка при удалении профиля", code = 500)
+                        ErrorResponse(error = "Ошибка при удалении профиля", code = 500),
                     )
                 }
             }
 
             post("/avatar") {
                 val principal = call.principal<JWTPrincipal>()
-                val userId = principal?.payload?.getClaim("userId")?.asString()
-                    ?: return@post call.respond(
-                        HttpStatusCode.Unauthorized,
-                        ErrorResponse(error = "Не авторизован", code = 401)
-                    )
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asString()
+                        ?: return@post call.respond(
+                            HttpStatusCode.Unauthorized,
+                            ErrorResponse(error = "Не авторизован", code = 401),
+                        )
 
                 val multipart = call.receiveMultipart()
                 var fileUrl: String? = null
@@ -257,10 +285,11 @@ fun Route.userRoutes(userService: UserService) {
                 }
 
                 when {
-                    errorMessage != null -> call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = errorMessage!!, code = 400)
-                    )
+                    errorMessage != null ->
+                        call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = errorMessage!!, code = 400),
+                        )
 
                     fileUrl != null -> {
                         userService.updateAvatarUrl(userId, fileUrl!!)

@@ -11,7 +11,7 @@ data class CreateUserRequest(
     val role: String,
     val experienceDescription: String? = null,
     val hourlyRate: String? = null,
-    val education: String? = null
+    val education: String? = null,
 )
 
 @Serializable
@@ -24,7 +24,7 @@ data class UserProfileResponse(
     val role: String,
     val experienceDescription: String? = null,
     val hourlyRate: Double? = null,
-    val averageRating: Float? = null
+    val averageRating: Float? = null,
 )
 
 @Serializable
@@ -34,12 +34,13 @@ data class MentorCardResponse(
     val hourlyRate: Double,
     val averageRating: Float,
     val contactInfo: String?,
-    val experienceDescription: String
+    val experienceDescription: String,
 )
 
 @Serializable
 data class CompetenceResponse(
-    val id: Int, val name: String
+    val id: Int,
+    val name: String,
 )
 
 @Serializable
@@ -52,18 +53,20 @@ data class DetailedMentorResponse(
     val experienceDescription: String,
     val hourlyRate: Double,
     val averageRating: Float,
-    val competences: List<CompetenceResponse>
+    val competences: List<CompetenceResponse>,
 )
-
 
 @Serializable
 data class LoginRequest(
-    val email: String, val passwordHash: String
+    val email: String,
+    val passwordHash: String,
 )
 
 @Serializable
 data class TokenResponse(
-    val token: String, val userId: String, val role: String
+    val token: String,
+    val userId: String,
+    val role: String,
 )
 
 @Serializable
@@ -72,7 +75,7 @@ data class UpdateProfileRequest(
     val newExperienceDescription: String? = null,
     val newHourlyRate: String? = null,
     val newEducation: String? = null,
-    val contactInfo: String? = null
+    val contactInfo: String? = null,
 )
 
 @Serializable
@@ -81,5 +84,5 @@ data class PaginatedResponse<T>(
     val totalCount: Long,
     val page: Int,
     val pageSize: Int,
-    val totalPages: Int
+    val totalPages: Int,
 )

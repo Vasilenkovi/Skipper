@@ -1,4 +1,5 @@
 @file:Suppress("WildcardImport")
+
 package com.example.features.reviews
 
 import com.example.core.ErrorResponse
@@ -18,11 +19,17 @@ fun Route.reviewRouting(reviewService: ReviewService) {
         authenticate {
             post("/{slotId}") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["slotId"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Не указан ID слота", code = 400)
-                    )
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
+                    val slotId =
+                        call.parameters["slotId"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Не указан ID слота", code = 400),
+                        )
 
                     val request = call.receive<CreateReviewRequest>()
 
@@ -37,7 +44,7 @@ fun Route.reviewRouting(reviewService: ReviewService) {
                     e.printStackTrace()
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }

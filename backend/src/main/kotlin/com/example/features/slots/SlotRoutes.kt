@@ -20,13 +20,18 @@ fun Route.slotRoutes(slotService: SlotService) {
         authenticate {
             post("/{id}/book") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val slotId = call.parameters["id"]
 
                     if (slotId == null) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
                         )
                         return@post
                     }
@@ -45,7 +50,12 @@ fun Route.slotRoutes(slotService: SlotService) {
 
             post {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val request = call.receive<CreateSlotRequest>()
 
                     val errorMessage = slotService.createSlot(userId, request)
@@ -61,8 +71,8 @@ fun Route.slotRoutes(slotService: SlotService) {
                         HttpStatusCode.BadRequest,
                         ErrorResponse(
                             error = "Неверный формат даты. Ожидался ISO 8601 (например: 2026-06-01T12:00:00)",
-                            code = 400
-                        )
+                            code = 400,
+                        ),
                     )
                 }
             }
@@ -73,7 +83,7 @@ fun Route.slotRoutes(slotService: SlotService) {
                     if (slotId == null) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
                         )
                         return@post
                     }
@@ -88,18 +98,24 @@ fun Route.slotRoutes(slotService: SlotService) {
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             post("/{id}/accept") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
-                    )
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
+                    val slotId =
+                        call.parameters["id"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
+                        )
 
                     val errorMessage = slotService.acceptSlotRequest(userId, slotId)
 
@@ -111,18 +127,24 @@ fun Route.slotRoutes(slotService: SlotService) {
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             post("/{id}/reject") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
-                    )
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
+                    val slotId =
+                        call.parameters["id"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
+                        )
 
                     val errorMessage = slotService.rejectSlotRequest(userId, slotId)
 
@@ -134,18 +156,24 @@ fun Route.slotRoutes(slotService: SlotService) {
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             post("/{id}/complete") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
-                    )
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
+                    val slotId =
+                        call.parameters["id"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
+                        )
 
                     val errorMessage = slotService.completeSlot(userId, slotId)
 
@@ -157,26 +185,32 @@ fun Route.slotRoutes(slotService: SlotService) {
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             post("/{slotId}/cancel") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
 
-                    val slotId = call.parameters["slotId"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Не указан ID слота", code = 400)
-                    )
+                    val slotId =
+                        call.parameters["slotId"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Не указан ID слота", code = 400),
+                        )
 
                     val errorMessage = slotService.cancelSlotByMentee(userId, slotId)
 
                     if (errorMessage == null) {
                         call.respond(
                             HttpStatusCode.OK,
-                            mapOf("message" to "Бронь успешно отменена, слот снова свободен")
+                            mapOf("message" to "Бронь успешно отменена, слот снова свободен"),
                         )
                     } else {
                         call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
@@ -185,18 +219,24 @@ fun Route.slotRoutes(slotService: SlotService) {
                     e.printStackTrace()
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             post("/{id}/link") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
-                    val slotId = call.parameters["id"] ?: return@post call.respond(
-                        HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Отсутствует ID слота", code = 400)
-                    )
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
+                    val slotId =
+                        call.parameters["id"] ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
+                        )
                     val request = call.receive<AttachMeetingLinkRequest>()
 
                     val errorMessage = slotService.attachMeetingLink(userId, slotId, request.meetingLink)
@@ -209,21 +249,26 @@ fun Route.slotRoutes(slotService: SlotService) {
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500)
+                        ErrorResponse(error = "Ошибка сервера", code = 500),
                     )
                 }
             }
 
             get {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val slots = slotService.getSlotsForExpert(userId)
 
                     call.respond(HttpStatusCode.OK, slots)
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка получения списка слотов", code = 500)
+                        ErrorResponse(error = "Ошибка получения списка слотов", code = 500),
                     )
                 }
             }
@@ -234,45 +279,54 @@ fun Route.slotRoutes(slotService: SlotService) {
                     if (mentorId == null) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Отсутствует ID ментора", code = 400)
+                            ErrorResponse(error = "Отсутствует ID ментора", code = 400),
                         )
                         return@get
                     }
 
                     val availableSlots = slotService.getAvailableSlotsForMentor(mentorId)
                     call.respond(HttpStatusCode.OK, availableSlots)
-
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка получения расписания", code = 500)
+                        ErrorResponse(error = "Ошибка получения расписания", code = 500),
                     )
                 }
             }
 
             get("/my") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val mySlots = slotService.getSlotsForMentee(userId)
 
                     call.respond(HttpStatusCode.OK, mySlots)
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка получения расписания", code = 500)
+                        ErrorResponse(error = "Ошибка получения расписания", code = 500),
                     )
                 }
             }
 
             delete("/{id}") {
                 try {
-                    val userId = call.principal<JWTPrincipal>()!!.payload.getClaim("userId").asString()
+                    val userId =
+                        call
+                            .principal<JWTPrincipal>()!!
+                            .payload
+                            .getClaim("userId")
+                            .asString()
                     val slotId = call.parameters["id"]
 
                     if (slotId == null) {
                         call.respond(
                             HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Отсутствует ID слота", code = 400)
+                            ErrorResponse(error = "Отсутствует ID слота", code = 400),
                         )
                         return@delete
                     }
@@ -285,18 +339,82 @@ fun Route.slotRoutes(slotService: SlotService) {
                         call.respond(
                             HttpStatusCode.NotFound,
                             ErrorResponse(
-                                error = "Слот не найден, не принадлежит вам или " +
-                                    "уже заблокирован/оплачен (статус не FREE)",
-                                code = 404
-                            )
+                                error =
+                                    "Слот не найден, не принадлежит вам или " +
+                                        "уже заблокирован/оплачен (статус не FREE)",
+                                code = 404,
+                            ),
                         )
                     }
                 } catch (e: Exception) {
                     call.respond(
                         HttpStatusCode.BadRequest,
-                        ErrorResponse(error = "Неверный формат ID слота", code = 400)
+                        ErrorResponse(error = "Неверный формат ID слота", code = 400),
                     )
                 }
+            }
+
+            @Suppress("TooGenericExceptionCaught")
+            post("/{id}/payment-link") {
+                val principal = call.principal<JWTPrincipal>()
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asString()
+                        ?: return@post call.respond(
+                            HttpStatusCode.Unauthorized,
+                            ErrorResponse(error = "Не авторизован", code = 401),
+                        )
+
+                val slotId =
+                    call.parameters["id"]
+                        ?: return@post call.respond(
+                            HttpStatusCode.BadRequest,
+                            ErrorResponse(error = "Неверный ID слота", code = 400),
+                        )
+
+                try {
+                    // Здесь в будущем будет реальный запрос к ЮKassa.
+                    // Пока мы генерируем фейковую ссылку для фронтенда и передаем в нее ID слота,
+                    // чтобы фронтенд мог сымитировать успешную оплату.
+                    val fakePaymentUrl = "https://dummy-payment-gateway.com/pay?slotId=$slotId&amount=1500"
+
+                    call.respond(
+                        HttpStatusCode.OK,
+                        mapOf(
+                            "paymentUrl" to fakePaymentUrl,
+                            "status" to "PENDING",
+                        ),
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    call.respond(
+                        HttpStatusCode.InternalServerError,
+                        ErrorResponse(error = "Ошибка при генерации ссылки", code = 500),
+                    )
+                }
+            }
+        }
+
+        @Suppress("TooGenericExceptionCaught")
+        post("/webhook/payment") {
+            try {
+                val requestParams = call.receive<Map<String, String>>()
+                val slotId = requestParams["slotId"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val secretKey = requestParams["secret"]
+
+                if (secretKey != "my_super_secret_webhook_key_123") {
+                    return@post call.respond(HttpStatusCode.Forbidden, "Неверный ключ безопасности")
+                }
+
+                val result = slotService.confirmPayment(slotId)
+
+                if (result == null) {
+                    call.respond(HttpStatusCode.OK, mapOf("message" to "Платеж успешно обработан"))
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to result))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, "Ошибка сервера")
             }
         }
     }
