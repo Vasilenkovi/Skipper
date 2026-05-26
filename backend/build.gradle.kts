@@ -71,16 +71,18 @@ dependencies {
     
     testImplementation("io.ktor:ktor-server-tests:2.3.12")
 }
-tasks.register<Exec>("generateOpenApiDocs") {
-    group = "documentation"
-    description = "Generate OpenAPI documentation"
-    commandLine(
-        "bash", "-c",
-        """
-        echo "OpenAPI specification is located at: backend/openapi.yaml"
-        echo "To view interactive documentation:"
-        echo "1. Install Redocly: npm install -g @redocly/cli"
-        echo "2. Run: redocly preview-docs openapi.yaml"
-        """.trimIndent()
-    )
+tasks.register("generateOpenApiDocs") {
+  group = "documentation"
+  description = "Info about OpenAPI spec location and preview commands"
+  doLast {
+    val specFile = file("openapi.yaml")
+    if (specFile.exists()) {
+      println("✅ OpenAPI spec found: ${specFile.absolutePath}")
+      println("\n📖 To preview documentation:")
+      println("1. npm install -g @redocly/cli")
+      println("2. redocly preview-docs openapi.yaml")
+    } else {
+      println("⚠️ openapi.yaml not found in project root. Create it first.")
+    }
+  }
 }
