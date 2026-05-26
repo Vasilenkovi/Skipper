@@ -1,4 +1,3 @@
-
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(ktorLibs.plugins.ktor)
@@ -16,12 +15,6 @@ application {
 
 kotlin {
   jvmToolchain(21)
-}
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
 }
 
 ktlint {
@@ -63,21 +56,6 @@ dependencies {
   testImplementation(kotlin("test"))
   testImplementation(ktorLibs.server.testHost)
 
-    implementation("io.ktor:ktor-server-auth-jvm")
-    implementation("io.ktor:ktor-server-auth-jwt-jvm")
-    
-    implementation("io.ktor:ktor-server-openapi:2.3.12")
-    implementation("io.swagger.core.v3:swagger-core:2.2.20")
-    
-    testImplementation("io.ktor:ktor-server-tests:2.3.12")
-}
-tasks.register("generateOpenApiDocs") {
-  group = "documentation"
-  description = "Info about OpenAPI spec"
-  doLast {
-    val specFile = file("openapi.yaml")
-    if (specFile.exists()) {
-      println("✅ OpenAPI spec: ${specFile.absolutePath}")
-    }
-  }
+  implementation("io.ktor:ktor-server-auth-jvm")
+  implementation("io.ktor:ktor-server-auth-jwt-jvm")
 }
