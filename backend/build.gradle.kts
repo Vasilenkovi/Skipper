@@ -63,6 +63,24 @@ dependencies {
   testImplementation(kotlin("test"))
   testImplementation(ktorLibs.server.testHost)
 
-  implementation("io.ktor:ktor-server-auth-jvm")
-  implementation("io.ktor:ktor-server-auth-jwt-jvm")
+    implementation("io.ktor:ktor-server-auth-jvm")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm")
+    
+    implementation("io.ktor:ktor-server-openapi:2.3.12")
+    implementation("io.swagger.core.v3:swagger-core:2.2.20")
+    
+    testImplementation("io.ktor:ktor-server-tests:2.3.12")
+}
+tasks.register<Exec>("generateOpenApiDocs") {
+    group = "documentation"
+    description = "Generate OpenAPI documentation"
+    commandLine(
+        "bash", "-c",
+        """
+        echo "OpenAPI specification is located at: backend/openapi.yaml"
+        echo "To view interactive documentation:"
+        echo "1. Install Redocly: npm install -g @redocly/cli"
+        echo "2. Run: redocly preview-docs openapi.yaml"
+        """.trimIndent()
+    )
 }

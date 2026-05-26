@@ -26,3 +26,31 @@ jobs:
       - name: Run ktlint & detekt
         run: ./gradlew ktlintCheck detekt --no-daemon
         working-directory: backend
+      - name: Upload Detekt Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+         name: detekt-report
+         path: backend/build/reports/detekt/detekt.html
+
+      - name: Upload Ktlint Report  
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+         name: ktlint-report
+         path: backend/build/reports/ktlint/
+      - name: Run API Contract Tests
+        run: ./gradlew test --tests "ApiContractTest" --no-daemon
+        working-directory: backend
+        env:
+          DATABASE_URL: jdbc:postgresql://localhost:5432/test_db
+          DATABASE_USER: test
+          DATABASE_PASSWORD: test
+          JWT_SECRET: test-secret-key-for-contract-testing
+
+      - name: Validate OpenAPI Spec
+        run: |
+          npm install -g @apidevtools/swagger-cli
+          swagger-cli validate openapi.yaml
+        working-directory: backend
+        continue-on-error: true
