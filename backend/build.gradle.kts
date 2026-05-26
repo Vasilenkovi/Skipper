@@ -63,4 +63,9 @@ dependencies {
 
     implementation("io.ktor:ktor-server-auth-jvm")
     implementation("io.ktor:ktor-server-auth-jwt-jvm")
+    
+    implementation("io.ktor:ktor-server-openapi:2.3.12")
+    implementation("io.swagger.core.v3:swagger-core:2.2.20")
+    
+    testImplementation("io.ktor:ktor-server-tests:2.3.12")
 }
