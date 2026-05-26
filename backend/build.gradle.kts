@@ -69,3 +69,16 @@ dependencies {
     
     testImplementation("io.ktor:ktor-server-tests:2.3.12")
 }
+tasks.register<Exec>("generateOpenApiDocs") {
+    group = "documentation"
+    description = "Generate OpenAPI documentation"
+    commandLine(
+        "bash", "-c",
+        """
+        echo "OpenAPI specification is located at: backend/openapi.yaml"
+        echo "To view interactive documentation:"
+        echo "1. Install Redocly: npm install -g @redocly/cli"
+        echo "2. Run: redocly preview-docs openapi.yaml"
+        """.trimIndent()
+    )
+}
