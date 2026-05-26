@@ -73,16 +73,11 @@ dependencies {
 }
 tasks.register("generateOpenApiDocs") {
   group = "documentation"
-  description = "Info about OpenAPI spec location and preview commands"
+  description = "Info about OpenAPI spec"
   doLast {
     val specFile = file("openapi.yaml")
     if (specFile.exists()) {
-      println("✅ OpenAPI spec found: ${specFile.absolutePath}")
-      println("\n📖 To preview documentation:")
-      println("1. npm install -g @redocly/cli")
-      println("2. redocly preview-docs openapi.yaml")
-    } else {
-      println("⚠️ openapi.yaml not found in project root. Create it first.")
+      println("✅ OpenAPI spec: ${specFile.absolutePath}")
     }
   }
 }
