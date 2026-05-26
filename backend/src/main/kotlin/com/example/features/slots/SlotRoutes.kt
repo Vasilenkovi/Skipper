@@ -298,6 +298,54 @@ fun Route.slotRoutes(slotService: SlotService) {
                     )
                 }
             }
+
+            @Suppress("TooGenericExceptionCaught")
+            post("/{id}/payment-link") {
+                val principal = call.principal<JWTPrincipal>()
+                val userId = principal?.payload?.getClaim("userId")?.asString()
+                    ?: return@post call.respond(HttpStatusCode.Unauthorized, ErrorResponse(error = "Не авторизован", code = 401))
+
+                val slotId = call.parameters["id"] ?: return@post call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = "Неверный ID слота", code = 400))
+
+                try {
+                    // Здесь в будущем будет реальный запрос к ЮKassa.
+                    // Пока мы генерируем фейковую ссылку для фронтенда и передаем в нее ID слота,
+                    // чтобы фронтенд мог сымитировать успешную оплату.
+                    val fakePaymentUrl = "https://dummy-payment-gateway.com/pay?slotId=$slotId&amount=1500"
+
+                    call.respond(HttpStatusCode.OK, mapOf(
+                        "paymentUrl" to fakePaymentUrl,
+                        "status" to "PENDING"
+                    ))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    call.respond(HttpStatusCode.InternalServerError, ErrorResponse(error = "Ошибка при генерации ссылки", code = 500))
+                }
+            }
+        }
+
+        @Suppress("TooGenericExceptionCaught")
+        post("/webhook/payment") {
+            try {
+                val requestParams = call.receive<Map<String, String>>()
+                val slotId = requestParams["slotId"] ?: return@post call.respond(HttpStatusCode.BadRequest)
+                val secretKey = requestParams["secret"]
+
+                if (secretKey != "my_super_secret_webhook_key_123") {
+                    return@post call.respond(HttpStatusCode.Forbidden, "Неверный ключ безопасности")
+                }
+
+                val result = slotService.confirmPayment(slotId)
+
+                if (result == null) {
+                    call.respond(HttpStatusCode.OK, mapOf("message" to "Платеж успешно обработан"))
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to result))
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                call.respond(HttpStatusCode.InternalServerError, "Ошибка сервера")
+            }
         }
     }
 }
