@@ -1,4 +1,5 @@
 @file:Suppress("WildcardImport")
+
 package com.example
 
 import com.example.core.DatabaseFactory
@@ -11,16 +12,16 @@ import com.example.features.slots.SlotService
 import com.example.features.slots.slotRoutes
 import com.example.features.users.UserService
 import com.example.features.users.userRoutes
-import io.ktor.http.*
-import io.ktor.server.application.*
-import io.ktor.server.http.content.*
-import io.ktor.server.plugins.statuspages.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.http.content.staticFiles
+import io.ktor.server.plugins.statuspages.StatusPages
+import io.ktor.server.response.respond
+import io.ktor.server.routing.routing
 import java.io.File
 
 fun Application.configureRouting() {
-
     DatabaseFactory.init()
     val userService = UserService()
     val competenceService = CompetenceService()
@@ -33,7 +34,7 @@ fun Application.configureRouting() {
             cause.printStackTrace()
             call.respond(
                 HttpStatusCode.InternalServerError,
-                ErrorResponse(error = "Внутренняя ошибка сервера", code = 500)
+                ErrorResponse(error = "Внутренняя ошибка сервера", code = 500),
             )
         }
     }

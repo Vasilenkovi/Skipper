@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class CreateSlotRequest(
-    val startTime: String
+    val startTime: String,
 )
 
 @Serializable
@@ -18,7 +18,7 @@ data class SlotResponse(
     val endTime: String,
     val meetingLink: String? = null,
     val priceAtBooking: Double? = null,
-    val status: String
+    val status: String,
 )
 
 @Serializable
@@ -29,10 +29,10 @@ data class MenteeSlotResponse(
     val endTime: String,
     val meetingLink: String? = null,
     val priceAtBooking: Double? = null,
-    val status: String
+    val status: String,
 )
 
 @Serializable
 data class AttachMeetingLinkRequest(
-    val meetingLink: String
+    val meetingLink: String,
 )

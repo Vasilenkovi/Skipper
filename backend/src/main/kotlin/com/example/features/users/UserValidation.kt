@@ -2,7 +2,10 @@ package com.example.features.users
 
 import java.math.BigDecimal
 
-fun validateRateAndDescription(hourlyRate: String?, experienceDescription: String?): String? {
+fun validateRateAndDescription(
+    hourlyRate: String?,
+    experienceDescription: String?,
+): String? {
     val rate = hourlyRate?.toBigDecimalOrNull()
     val linkRegex = Regex("""(?i)(https?://|www\.|[a-zA-Z0-9-]+\.[a-zA-Z]{2,}(/|\b))""")
 
