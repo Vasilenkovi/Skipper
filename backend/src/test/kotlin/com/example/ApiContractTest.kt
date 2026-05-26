@@ -1,6 +1,6 @@
 @file:Suppress("WildcardImport")
 
-package com.example.test
+package com.example
 
 import com.example.plugins.*
 import io.ktor.client.request.contentType
