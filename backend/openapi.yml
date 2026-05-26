@@ -1,0 +1,455 @@
+openapi: 3.0.3
+info:
+  title: Skipper API
+  description: API для платформы менторства Skipper
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ErrorResponse:
+      type: object
+      required: [error, code]
+      properties:
+        error:
+          type: string
+        code:
+          type: integer
+
+    User:
+      type: object
+      required: [id, email, role]
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum: [MENTEE, EXPERT]
+        hourlyRate:
+          type: number
+          format: float
+        experienceDescription:
+          type: string
+        photoUrl:
+          type: string
+
+    TokenResponse:
+      type: object
+      required: [token, userId, role]
+      properties:
+        token:
+          type: string
+        userId:
+          type: string
+        role:
+          type: string
+
+    Slot:
+      type: object
+      required: [id, mentorId, startTime, status]
+      properties:
+        id:
+          type: string
+        mentorId:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [FREE, REQUESTED, BOOKED, COMPLETED, CANCELLED]
+        meetingLink:
+          type: string
+
+    MentorListResponse:
+      type: object
+      required: [mentors, total]
+      properties:
+        mentors:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        total:
+          type: integer
+
+paths:
+  /api/users/register:
+    post:
+      summary: Регистрация нового пользователя
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, role]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 6
+                role:
+                  type: string
+                  enum: [MENTEE, EXPERT]
+                hourlyRate:
+                  type: number
+                experienceDescription:
+                  type: string
+      responses:
+        '201':
+          description: Пользователь зарегистрирован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Пользователь уже существует
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/login:
+    post:
+      summary: Аутентификация пользователя
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: Неверные учетные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/mentors:
+    get:
+      summary: Получить список менторов с пагинацией
+      tags: [Users]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Список менторов
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorListResponse'
+
+  /api/users/mentors/{id}:
+    get:
+      summary: Получить ментора по ID
+      tags: [Users]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Информация о менторе
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: Ментор не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/users/profile:
+    get:
+      summary: Получить текущий профиль
+      tags: [Users]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Профиль пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Не авторизован
+        '404':
+          description: Профиль не найден
+
+  /api/slots:
+    post:
+      summary: Создать новый слот (для экспертов)
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [startTime]
+              properties:
+                startTime:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Слот создан
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Ошибка валидации
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Получить слоты для текущего эксперта
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список слотов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+
+  /api/slots/mentor/{mentorId}:
+    get:
+      summary: Получить доступные слоты ментора
+      tags: [Slots]
+      parameters:
+        - name: mentorId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Доступные слоты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+
+  /api/slots/my:
+    get:
+      summary: Получить мои бронирования (для менти)
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Список бронирований
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Slot'
+
+  /api/slots/{id}/book:
+    post:
+      summary: Забронировать слот
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Слот забронирован
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '409':
+          description: Слот недоступен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/slots/{id}/confirm-payment:
+    post:
+      summary: Подтвердить оплату
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Оплата подтверждена
+        '400':
+          description: Ошибка подтверждения
+
+  /api/slots/{id}/accept:
+    post:
+      summary: Принять заявку на бронирование
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Заявка принята
+        '400':
+          description: Ошибка
+
+  /api/slots/{id}/reject:
+    post:
+      summary: Отклонить заявку
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Заявка отклонена
+        '400':
+          description: Ошибка
+
+  /api/slots/{id}/complete:
+    post:
+      summary: Завершить занятие
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Занятие завершено
+        '400':
+          description: Ошибка
+
+  /api/slots/{id}/cancel:
+    post:
+      summary: Отменить бронирование
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Бронирование отменено
+        '400':
+          description: Ошибка
+
+  /api/slots/{id}:
+    delete:
+      summary: Удалить слот
+      tags: [Slots]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Слот удален
+        '404':
+          description: Слот не найден
