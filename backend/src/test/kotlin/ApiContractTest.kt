@@ -1,6 +1,6 @@
 @file:Suppress("WildcardImport")
 
-package com.example
+package com.example.test
 
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -80,6 +80,8 @@ class ApiContractTest {
                 }
             """.trimIndent())
         }
+        
+        assertTrue(registerResponse.status in listOf(HttpStatusCode.Created, HttpStatusCode.Conflict))
 
         val loginResponse = client.post("/api/users/login") {
             contentType(ContentType.Application.Json)
