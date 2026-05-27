@@ -24,7 +24,7 @@ fun createTestDatabase(): Database = Database.connect(
 fun testApplicationWithDb(block: suspend TestApplicationEngine.() -> Unit) {
   val db = createTestDatabase()
   transaction(db) {
-    SchemaUtils.create(Users, Competences, Slots, Reviews, ifNotExists = true)
+    SchemaUtils.create(Users, Competences, Slots, Reviews)
   }
   try {
     testApplication {
