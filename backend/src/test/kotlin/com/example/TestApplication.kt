@@ -2,12 +2,10 @@
 
 package com.example
 
-import com.example.features.competences.tables.Competences
-import com.example.features.reviews.tables.Reviews
-import com.example.features.slots.tables.Slots
-import com.example.features.users.tables.Users
-import com.example.plugins.configureRouting
-import com.example.plugins.configureSerialization
+import com.example.features.competences.Competences
+import com.example.features.reviews.Reviews
+import com.example.features.slots.Slots
+import com.example.features.users.Users
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import org.jetbrains.exposed.sql.Database
