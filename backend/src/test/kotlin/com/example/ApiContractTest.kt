@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class ApiContractTest {
-
   @Test
   fun `test users register endpoint contract`() = testApplication {
     val response = client.post("/api/users/register") {
@@ -30,7 +29,11 @@ class ApiContractTest {
       )
     }
     assertTrue(
-      response.status in listOf(HttpStatusCode.Created, HttpStatusCode.Conflict, HttpStatusCode.OK),
+      response.status in listOf(
+        HttpStatusCode.Created,
+        HttpStatusCode.Conflict,
+        HttpStatusCode.OK,
+      ),
     )
     val body = response.bodyAsText()
     assertTrue(body.isNotBlank())
@@ -62,7 +65,10 @@ class ApiContractTest {
       )
     }
     assertTrue(
-      response.status in listOf(HttpStatusCode.OK, HttpStatusCode.Unauthorized),
+      response.status in listOf(
+        HttpStatusCode.OK,
+        HttpStatusCode.Unauthorized,
+      ),
     )
     if (response.status == HttpStatusCode.OK) {
       val body = response.bodyAsText()
@@ -107,7 +113,7 @@ class ApiContractTest {
       println("⚠️ Auth not configured in tests, skipping slot creation test")
       return@testApplication
     }
-    val token = "test-token" // Заглушка, если авторизация не настроена
+    val token = "test-token"
     val response = client.post("/api/slots") {
       contentType(ContentType.Application.Json)
       header(HttpHeaders.Authorization, "Bearer $token")
