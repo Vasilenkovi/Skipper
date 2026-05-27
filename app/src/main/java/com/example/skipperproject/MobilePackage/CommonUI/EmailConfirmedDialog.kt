@@ -1,4 +1,4 @@
-package com.example.skipperproject.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,10 +16,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.skipperproject.R
-import com.example.skipperproject.ui.theme.MobileTextStyles
-import com.example.skipperproject.ui.theme.SkipperColors
-import com.example.skipperproject.ui.theme.SkipperDimensions
-import com.example.skipperproject.ui.theme.SkipperProjectTheme
+import com.example.skipperproject.MobilePackage.CommonUI.theme.MobileTextStyles
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperDimensions
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperProjectTheme
 
 @Composable
 fun EmailConfirmedDialog(

@@ -1,4 +1,4 @@
-package com.example.skipperproject.ui.theme
+package com.example.skipperproject.MobilePackage.CommonUI.theme
 
 import androidx.compose.ui.unit.dp
 

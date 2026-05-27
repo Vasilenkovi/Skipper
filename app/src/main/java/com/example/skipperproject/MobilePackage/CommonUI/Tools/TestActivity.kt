@@ -1,4 +1,4 @@
-package com.example.skipperproject.Tools
+package com.example.skipperproject.MobilePackage.CommonUI.Tools
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

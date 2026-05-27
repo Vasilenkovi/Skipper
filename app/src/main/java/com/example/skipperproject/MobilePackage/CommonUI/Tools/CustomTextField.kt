@@ -1,4 +1,4 @@
-package com.example.skipperproject.Tools
+package com.example.skipperproject.MobilePackage.CommonUI.Tools
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -7,8 +7,8 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.skipperproject.ui.theme.MobileTextStyles
-import com.example.skipperproject.ui.theme.SkipperDimensions
+import com.example.skipperproject.MobilePackage.CommonUI.theme.MobileTextStyles
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperDimensions
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

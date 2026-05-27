@@ -1,4 +1,4 @@
-package com.example.skipperproject.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,10 +15,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.skipperproject.R
-import com.example.skipperproject.Tools.SkipperScreen
-import com.example.skipperproject.ui.theme.SkipperColors
-import com.example.skipperproject.ui.theme.SkipperDimensions
-import com.example.skipperproject.ui.theme.SkipperProjectTheme
+import com.example.skipperproject.MobilePackage.CommonUI.Tools.SkipperScreen
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperDimensions
+import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperProjectTheme
 
 class MainScreenActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
