@@ -19,7 +19,7 @@ class ApiContractTest {
       val response = client.post("/api/users/register") {
         contentType(ContentType.Application.Json)
         setBody(
-          """{"email":"t@t.com","password":"123","role":"MENTEE"}"""
+          """{"email":"t@t.com","password":"123","role":"MENTEE"}""",
         )
       }
       println(">>> Register: status=${response.status}, body=${response.bodyAsText().take(200)}")
@@ -32,13 +32,13 @@ class ApiContractTest {
       client.post("/api/users/register") {
         contentType(ContentType.Application.Json)
         setBody(
-          """{"email":"login@test.com","password":"123","role":"MENTEE"}"""
+          """{"email":"login@test.com","password":"123","role":"MENTEE"}""",
         )
       }
       val response = client.post("/api/users/login") {
         contentType(ContentType.Application.Json)
         setBody(
-          """{"email":"login@test.com","password":"123"}"""
+          """{"email":"login@test.com","password":"123"}""",
         )
       }
       println(">>> Login: status=${response.status}, body=${response.bodyAsText().take(200)}")
