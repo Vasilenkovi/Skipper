@@ -23,7 +23,7 @@ fun createTestDatabase(): Database {
   )
 }
 
-fun testApplicationWithDb(test: suspend TestApplicationEngine.() -> Unit) {
+fun testApplicationWithDb(block: suspend TestApplicationEngine.() -> Unit) {
   val db = createTestDatabase()
   
   transaction(db) {
@@ -37,7 +37,7 @@ fun testApplicationWithDb(test: suspend TestApplicationEngine.() -> Unit) {
         configureRouting()
         configureSecurity()
       }
-      test()
+      block()
     }
   } finally {
     // Чистим БД после теста
