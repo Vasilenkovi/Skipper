@@ -4,7 +4,6 @@ package com.example
 
 import com.example.plugins.configureRouting
 import com.example.plugins.configureSerialization
-import io.ktor.server.application.Application
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.testApplication
 import org.jetbrains.exposed.sql.Database
