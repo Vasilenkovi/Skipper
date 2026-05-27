@@ -18,7 +18,9 @@ class ApiContractTest {
     testApplication {
       val response = client.post("/api/users/register") {
         contentType(ContentType.Application.Json)
-        setBody("""{"email":"t@t.com","password":"123","role":"MENTEE"}""")
+        setBody(
+          """{"email":"t@t.com","password":"123","role":"MENTEE"}"""
+        )
       }
       println(">>> Register: status=${response.status}, body=${response.bodyAsText().take(200)}")
       assertNotNull(response.bodyAsText())
@@ -29,11 +31,15 @@ class ApiContractTest {
     testApplication {
       client.post("/api/users/register") {
         contentType(ContentType.Application.Json)
-        setBody("""{"email":"login@test.com","password":"123","role":"MENTEE"}""")
+        setBody(
+          """{"email":"login@test.com","password":"123","role":"MENTEE"}"""
+        )
       }
       val response = client.post("/api/users/login") {
         contentType(ContentType.Application.Json)
-        setBody("""{"email":"login@test.com","password":"123"}""")
+        setBody(
+          """{"email":"login@test.com","password":"123"}"""
+        )
       }
       println(">>> Login: status=${response.status}, body=${response.bodyAsText().take(200)}")
       assertNotNull(response.bodyAsText())
