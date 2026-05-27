@@ -19,7 +19,7 @@ fun createTestDatabase(): Database =
     url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=PostgreSQL",
     driver = "org.h2.Driver",
     user = "test",
-    password = ""
+    password = "",
   )
 
 fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
