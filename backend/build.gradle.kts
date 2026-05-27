@@ -55,6 +55,7 @@ dependencies {
 
   testImplementation(kotlin("test"))
   testImplementation(ktorLibs.server.testHost)
+  testImplementation("com.h2database:h2:2.2.224")
 
   implementation("io.ktor:ktor-server-auth-jvm")
   implementation("io.ktor:ktor-server-auth-jwt-jvm")
