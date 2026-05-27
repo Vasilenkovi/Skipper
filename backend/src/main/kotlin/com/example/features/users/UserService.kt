@@ -19,6 +19,7 @@ class UserService {
     dbQuery {
       try {
         val securedPassword = BCrypt.hashpw(request.passwordHash, BCrypt.gensalt(12))
+        val generatedCode = (100000..999999).random().toString()
 
         val newUserID =
           Users
@@ -28,6 +29,8 @@ class UserService {
               it[authProvider] = request.authProvider
               it[fullName] = request.fullName
               it[role] = request.role
+              it[isEmailConfirmed] = false
+              it[confirmationCode] = generatedCode
             }.value
 
         if (request.role == "Mentor") {
@@ -39,12 +42,34 @@ class UserService {
           }
         }
 
+        println("=========================================")
+        println("📧 ПИСЬМО НА ПОЧТУ: ${request.email}")
+        println("🔑 КОД ПОДТВЕРЖДЕНИЯ: $generatedCode")
+        println("=========================================")
+
         newUserID
       } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
         null
       } catch (e: IllegalArgumentException) {
         null
       }
+    }
+
+  suspend fun confirmEmail(
+    email: String,
+    code: String,
+  ): Pair<String, String>? =
+    dbQuery {
+      val userRow = Users.select { Users.email eq email }.singleOrNull()
+
+      if (userRow != null && userRow[Users.confirmationCode] == code) {
+        Users.update({ Users.email eq email }) {
+          it[isEmailConfirmed] = true
+          it[confirmationCode] = null
+        }
+        return@dbQuery Pair(userRow[Users.id].value.toString(), userRow[Users.role])
+      }
+      return@dbQuery null
     }
 
   suspend fun getMentorById(mentorID: String): DetailedMentorResponse? {

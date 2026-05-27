@@ -15,6 +15,12 @@ data class CreateUserRequest(
 )
 
 @Serializable
+data class EmailConfirmationRequest(
+  val email: String,
+  val code: String,
+)
+
+@Serializable
 data class UserProfileResponse(
   val id: String,
   val email: String,

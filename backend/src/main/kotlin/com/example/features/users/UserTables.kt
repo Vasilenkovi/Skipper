@@ -5,6 +5,8 @@ import org.jetbrains.exposed.sql.ReferenceOption
 
 object Users : UUIDTable("users") {
   val email = varchar("email", 255).uniqueIndex()
+  val isEmailConfirmed = bool("is_email_confirmed").default(false)
+  val confirmationCode = varchar("confirmation_code", 6).nullable()
   val passwordHash = varchar("password_hash", 255)
   val authProvider = varchar("auth_provider", 50)
   val fullName = varchar("full_name", 255)

@@ -19,7 +19,7 @@ object DatabaseFactory {
     val config =
       HikariConfig().apply {
         driverClassName = "org.postgresql.Driver"
-        jdbcUrl = "jdbc:postgresql://127.0.0.1:5433/skipper_database"
+        jdbcUrl = "jdbc:postgresql://127.0.0.1:5433/skipper_database?currentSchema=public"
         username = "skipper_admin"
         password = "oM2dX_PI1U"
         maximumPoolSize = 3

@@ -64,6 +64,29 @@ fun Route.userRoutes(userService: UserService) {
       }
     }
 
+    post("/confirm") {
+      try {
+        val request = call.receive<EmailConfirmationRequest>()
+        val userData = userService.confirmEmail(request.email, request.code)
+
+        if (userData != null) {
+          val (userId, role) = userData
+          val token = JwtConfig.generateToken(userId, role)
+          call.respond(HttpStatusCode.OK, TokenResponse(token, userId, role))
+        } else {
+          call.respond(
+            HttpStatusCode.BadRequest,
+            ErrorResponse(error = "Неверный код или email", code = 400),
+          )
+        }
+      } catch (e: Exception) {
+        call.respond(
+          HttpStatusCode.BadRequest,
+          ErrorResponse(error = "Неверный формат запроса", code = 400),
+        )
+      }
+    }
+
     get("/mentors") {
       try {
         val page =
