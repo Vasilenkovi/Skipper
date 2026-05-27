@@ -14,48 +14,48 @@ import kotlin.test.assertNotNull
 
 class ApiContractTest {
   @Test
-  fun `test users register endpoint contract`() =
+  fun `test users register endpoint contract`() {
     testApplication {
-      val response = client.post("/api/users/register") {
-        contentType(ContentType.Application.Json)
-        setBody(
-          """{"email":"t@t.com","password":"123","role":"MENTEE"}""",
-        )
-      }
+      val response =
+        client.post("/api/users/register") {
+          contentType(ContentType.Application.Json)
+          setBody("""{"email":"t@t.com","password":"123","role":"MENTEE"}""")
+        }
       println(">>> Register: status=${response.status}, body=${response.bodyAsText().take(200)}")
       assertNotNull(response.bodyAsText())
     }
+  }
 
   @Test
-  fun `test login endpoint contract`() =
+  fun `test login endpoint contract`() {
     testApplication {
       client.post("/api/users/register") {
         contentType(ContentType.Application.Json)
-        setBody(
-          """{"email":"login@test.com","password":"123","role":"MENTEE"}""",
-        )
+        setBody("""{"email":"login@test.com","password":"123","role":"MENTEE"}""")
       }
-      val response = client.post("/api/users/login") {
-        contentType(ContentType.Application.Json)
-        setBody(
-          """{"email":"login@test.com","password":"123"}""",
-        )
-      }
+      val response =
+        client.post("/api/users/login") {
+          contentType(ContentType.Application.Json)
+          setBody("""{"email":"login@test.com","password":"123"}""")
+        }
       println(">>> Login: status=${response.status}, body=${response.bodyAsText().take(200)}")
       assertNotNull(response.bodyAsText())
     }
+  }
 
   @Test
-  fun `test mentors list endpoint contract`() =
+  fun `test mentors list endpoint contract`() {
     testApplication {
       val response = client.get("/api/users/mentors")
       println(">>> Mentors: status=${response.status}, body=${response.bodyAsText().take(200)}")
       assertNotNull(response.bodyAsText())
     }
+  }
 
   @Test
-  fun `test slots creation endpoint contract`() =
+  fun `test slots creation endpoint contract`() {
     testApplication {
       println(">>> Slots: skipping auth-dependent test for now")
     }
+  }
 }
