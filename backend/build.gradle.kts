@@ -1,4 +1,3 @@
-
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(ktorLibs.plugins.ktor)
@@ -16,12 +15,6 @@ application {
 
 kotlin {
   jvmToolchain(21)
-}
-
-java {
-  toolchain {
-    languageVersion = JavaLanguageVersion.of(21)
-  }
 }
 
 ktlint {
@@ -44,6 +37,14 @@ detekt {
   autoCorrect = false
 }
 
+
+tasks.test {
+  useJUnitPlatform()
+  testLogging {
+    events("passed", "skipped", "failed")
+  }
+}
+
 dependencies {
   implementation("io.ktor:ktor-server-status-pages")
   implementation("org.mindrot:jbcrypt:0.4")
@@ -59,10 +60,14 @@ dependencies {
   implementation(ktorLibs.server.core)
   implementation(ktorLibs.server.netty)
   implementation(libs.logback.classic)
-
-  testImplementation(kotlin("test"))
-  testImplementation(ktorLibs.server.testHost)
-
   implementation("io.ktor:ktor-server-auth-jvm")
   implementation("io.ktor:ktor-server-auth-jwt-jvm")
+
+  testImplementation(kotlin("test"))
+  testImplementation(ktorLibs.server.testHost) 
+  testImplementation("com.h2database:h2:2.2.224")
+
+  testImplementation("org.testcontainers:testcontainers:1.19.7")
+  testImplementation("org.testcontainers:postgresql:1.19.7")
+  testImplementation("org.testcontainers:junit-jupiter:1.19.7")
 }

@@ -22,29 +22,29 @@ import io.ktor.server.routing.routing
 import java.io.File
 
 fun Application.configureRouting() {
-    DatabaseFactory.init()
-    val userService = UserService()
-    val competenceService = CompetenceService()
-    val slotService = SlotService()
-    val reviewService = ReviewService()
+  DatabaseFactory.init()
+  val userService = UserService()
+  val competenceService = CompetenceService()
+  val slotService = SlotService()
+  val reviewService = ReviewService()
 
-    // Устанавливаем глобальный перехватчик ошибок
-    install(StatusPages) {
-        exception<Throwable> { call, cause ->
-            cause.printStackTrace()
-            call.respond(
-                HttpStatusCode.InternalServerError,
-                ErrorResponse(error = "Внутренняя ошибка сервера", code = 500),
-            )
-        }
+  // Устанавливаем глобальный перехватчик ошибок
+  install(StatusPages) {
+    exception<Throwable> { call, cause ->
+      cause.printStackTrace()
+      call.respond(
+        HttpStatusCode.InternalServerError,
+        ErrorResponse(error = "Внутренняя ошибка сервера", code = 500),
+      )
     }
+  }
 
-    routing {
-        userRoutes(userService)
-        competenceRoutes(competenceService)
-        slotRoutes(slotService)
-        reviewRouting(reviewService)
+  routing {
+    userRoutes(userService)
+    competenceRoutes(competenceService)
+    slotRoutes(slotService)
+    reviewRouting(reviewService)
 
-        staticFiles("/uploads", File("uploads"))
-    }
+    staticFiles("/uploads", File("uploads"))
+  }
 }

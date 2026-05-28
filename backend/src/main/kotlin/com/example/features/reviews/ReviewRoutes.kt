@@ -15,39 +15,39 @@ import io.ktor.server.routing.route
 
 @Suppress("TooGenericExceptionCaught", "SwallowedException")
 fun Route.reviewRouting(reviewService: ReviewService) {
-    route("/api/reviews") {
-        authenticate {
-            post("/{slotId}") {
-                try {
-                    val userId =
-                        call
-                            .principal<JWTPrincipal>()!!
-                            .payload
-                            .getClaim("userId")
-                            .asString()
-                    val slotId =
-                        call.parameters["slotId"] ?: return@post call.respond(
-                            HttpStatusCode.BadRequest,
-                            ErrorResponse(error = "Не указан ID слота", code = 400),
-                        )
+  route("/api/reviews") {
+    authenticate {
+      post("/{slotId}") {
+        try {
+          val userId =
+            call
+              .principal<JWTPrincipal>()!!
+              .payload
+              .getClaim("userId")
+              .asString()
+          val slotId =
+            call.parameters["slotId"] ?: return@post call.respond(
+              HttpStatusCode.BadRequest,
+              ErrorResponse(error = "Не указан ID слота", code = 400),
+            )
 
-                    val request = call.receive<CreateReviewRequest>()
+          val request = call.receive<CreateReviewRequest>()
 
-                    val errorMessage = reviewService.leaveReview(userId, slotId, request)
+          val errorMessage = reviewService.leaveReview(userId, slotId, request)
 
-                    if (errorMessage == null) {
-                        call.respond(HttpStatusCode.OK, mapOf("message" to "Отзыв успешно сохранен! Рейтинг обновлен."))
-                    } else {
-                        call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    call.respond(
-                        HttpStatusCode.InternalServerError,
-                        ErrorResponse(error = "Ошибка сервера", code = 500),
-                    )
-                }
-            }
+          if (errorMessage == null) {
+            call.respond(HttpStatusCode.OK, mapOf("message" to "Отзыв успешно сохранен! Рейтинг обновлен."))
+          } else {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse(error = errorMessage, code = 400))
+          }
+        } catch (e: Exception) {
+          e.printStackTrace()
+          call.respond(
+            HttpStatusCode.InternalServerError,
+            ErrorResponse(error = "Ошибка сервера", code = 500),
+          )
         }
+      }
     }
+  }
 }

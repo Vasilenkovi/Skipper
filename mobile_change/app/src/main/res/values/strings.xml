@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">SkipperProject</string>
+    <string name="welcome_message">Приём,\nSkipper?</string>
+    <string name="ready_to_help">Мы готовы\nпомочь!</string>
+    <string name="find_mentor">Найди своего\nментора</string>
+    <string name="start_search">Начать поиск</string>
+    
+    <string name="login_title">Войти в аккаунт</string>
+    <string name="email_label">Адрес электронной почты</string>
+    <string name="password_label">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="no_account">Нет аккаунта?</string>
+    <string name="register">Зарегистрируйтесь</string>
+
+    <string name="registration_title">Регистрация</string>
+    <string name="email_label_numbered">1 Адрес электронной почты</string>
+    <string name="create_password_label">2 Придумайте пароль</string>
+    <string name="repeat_password_label">3 Повторите пароль</string>
+    <string name="confirm_email_button">Подтвердить почту</string>
+    <string name="resend_email">Отправить письмо повторно</string>
+    <string name="have_account">Есть аккаунт?</string>
+    <string name="login_link">Войти</string>
+
+    <string name="email_confirmed_title">Почта успешно\nподтверждена!</string>
+    <string name="email_confirmed_subtitle">Осталось лишь только познакомиться с вами поближе</string>
+    <string name="continue_button">Продолжить</string>
+</resources>

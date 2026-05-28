@@ -5,10 +5,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class ServerTest {
-    @Test
-    fun `test root endpoint`() =
-        testApplication {
-            configure()
-            assertEquals(HttpStatusCode.OK, client.get("/").status)
-        }
+  @Test
+  fun `test root endpoint`() =
+    testApplication {
+      configure()
+      assertEquals(HttpStatusCode.OK, client.get("/").status)
+    }
 }
