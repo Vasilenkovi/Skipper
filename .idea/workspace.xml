@@ -4,14 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9d1cb90e-a1a9-43d4-84e5-b23b95a08948" name="Changes" comment="feat: add email confirmation logic, code generation and db columns">
+    <list default="true" id="9d1cb90e-a1a9-43d4-84e5-b23b95a08948" name="Changes" comment="feat: add email confirmation logic, code generation and db columns&#10;test: migrate TestApplicationEngine to ApplicationTestBuilder for Ktor 3 compatibility">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/backend/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/core/DatabaseFactory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/core/DatabaseFactory.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserModels.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserModels.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserRoutes.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserRoutes.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserTables.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/kotlin/com/example/features/users/UserTables.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/test/kotlin/com/example/ApiContractTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/kotlin/com/example/ApiContractTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/test/kotlin/com/example/TestApplication.kt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/test/kotlin/com/example/TestApplication.kt" afterDir="false" />
     </list>
@@ -136,6 +130,15 @@
       <option name="presentableId" value="Default" />
       <updated>1779899572986</updated>
     </task>
+    <task id="LOCAL-00001" summary="feat: add email confirmation logic, code generation and db columns&#10;test: migrate TestApplicationEngine to ApplicationTestBuilder for Ktor 3 compatibility">
+      <option name="closed" value="true" />
+      <created>1779901966144</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1779901966144</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +157,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feat: add email confirmation logic, code generation and db columns" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add email confirmation logic, code generation and db columns" />
+    <MESSAGE value="feat: add email confirmation logic, code generation and db columns&#10;test: migrate TestApplicationEngine to ApplicationTestBuilder for Ktor 3 compatibility" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: add email confirmation logic, code generation and db columns&#10;test: migrate TestApplicationEngine to ApplicationTestBuilder for Ktor 3 compatibility" />
   </component>
 </project>
