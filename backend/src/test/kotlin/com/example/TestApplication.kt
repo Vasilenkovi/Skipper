@@ -3,9 +3,12 @@
 package com.example
 
 import com.example.features.competences.Competences
+import com.example.features.competences.ExpertCompetences
 import com.example.features.reviews.Reviews
 import com.example.features.slots.Slots
+import com.example.features.users.ExpertProfiles
 import com.example.features.users.Users
+import io.ktor.server.config.MapApplicationConfig
 import io.ktor.server.testing.ApplicationTestBuilder
 import io.ktor.server.testing.testApplication
 import org.jetbrains.exposed.sql.Database
@@ -23,19 +26,23 @@ fun createTestDatabase(): Database =
 fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
   val db = createTestDatabase()
   transaction(db) {
-    SchemaUtils.create(Users, Competences, Slots, Reviews)
+    SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
   }
   try {
     testApplication {
+      environment {
+        config = MapApplicationConfig()
+      }
       application {
         configureSerialization()
+        configureSecurity()
         configureRouting()
       }
       block()
     }
   } finally {
     transaction(db) {
-      SchemaUtils.drop(Users, Competences, Slots, Reviews)
+      SchemaUtils.drop(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
     }
   }
 }
