@@ -42,7 +42,8 @@ class UserService {
           }
         }
 
-        com.example.core.EmailService.sendConfirmationCode(request.email, generatedCode)
+        com.example.core.EmailService
+          .sendConfirmationCode(request.email, generatedCode)
 
         newUserID
       } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {
