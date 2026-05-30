@@ -37,7 +37,6 @@ detekt {
   autoCorrect = false
 }
 
-
 tasks.test {
   useJUnitPlatform()
   testLogging {
@@ -65,7 +64,7 @@ dependencies {
   implementation("io.ktor:ktor-server-auth-jwt-jvm")
 
   testImplementation(kotlin("test"))
-  testImplementation(ktorLibs.server.testHost) 
+  testImplementation(ktorLibs.server.testHost)
   testImplementation("com.h2database:h2:2.2.224")
 
   testImplementation("org.testcontainers:testcontainers:1.19.7")

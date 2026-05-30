@@ -21,7 +21,6 @@ import io.ktor.server.routing.routing
 import java.io.File
 
 fun Application.configureRouting() {
-
   val userService = UserService()
   val competenceService = CompetenceService()
   val slotService = SlotService()
