@@ -42,10 +42,7 @@ class UserService {
           }
         }
 
-        println("=========================================")
-        println("📧 ПИСЬМО НА ПОЧТУ: ${request.email}")
-        println("🔑 КОД ПОДТВЕРЖДЕНИЯ: $generatedCode")
-        println("=========================================")
+        com.example.core.EmailService.sendConfirmationCode(request.email, generatedCode)
 
         newUserID
       } catch (e: org.jetbrains.exposed.exceptions.ExposedSQLException) {

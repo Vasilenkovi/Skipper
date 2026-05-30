@@ -46,6 +46,7 @@ tasks.test {
 }
 
 dependencies {
+  implementation("org.apache.commons:commons-email:1.5")
   implementation("io.ktor:ktor-server-status-pages")
   implementation("org.mindrot:jbcrypt:0.4")
   implementation("org.jetbrains.exposed:exposed-core:0.47.0")
