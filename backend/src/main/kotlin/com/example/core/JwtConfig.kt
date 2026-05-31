@@ -8,6 +8,7 @@ import java.util.Date
 object JwtConfig {
   private val secret =
     System.getenv("JWT_SECRET")
+      ?: "test-secret-key-for-local-runs"
       ?: throw IllegalArgumentException("Missing secret environment variable")
 
   // для теста ?: "test-secret-key-for-local-runs"
