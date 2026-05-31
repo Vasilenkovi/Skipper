@@ -8,6 +8,8 @@ import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -131,5 +133,85 @@ class UserRoutesTest {
         }
 
       assertEquals(HttpStatusCode.Unauthorized, loginResponse.status)
+    }
+
+  @Test
+  fun `test email confirmation returns 200 OK with valid code`() =
+    testApplicationWithDb {
+      val testEmail = "confirm.success@example.com"
+
+      client.post("/api/users/register") {
+        contentType(ContentType.Application.Json)
+        setBody(
+          """
+          {
+            "email": "$testEmail",
+            "passwordHash": "securepassword123",
+            "authProvider": "local",
+            "fullName": "Пользователь Подтверждение",
+            "role": "Mentee"
+          }
+          """.trimIndent(),
+        )
+      }
+
+      var confirmationCode = ""
+      transaction {
+        confirmationCode = Users
+          .select { Users.email eq testEmail }
+          .single()[Users.confirmationCode] ?: ""
+      }
+
+      val confirmResponse =
+        client.post("/api/users/confirm") {
+          contentType(ContentType.Application.Json)
+          setBody(
+            """
+            {
+              "email": "$testEmail",
+              "code": "$confirmationCode"
+            }
+            """.trimIndent(),
+          )
+        }
+
+      assertEquals(HttpStatusCode.OK, confirmResponse.status)
+      assert(confirmResponse.bodyAsText().contains("token")) { "Ответ не содержит токена!" }
+    }
+
+  @Test
+  fun `test email confirmation returns 400 Bad Request with invalid code`() =
+    testApplicationWithDb {
+      val testEmail = "confirm.fail@example.com"
+
+      client.post("/api/users/register") {
+        contentType(ContentType.Application.Json)
+        setBody(
+          """
+          {
+            "email": "$testEmail",
+            "passwordHash": "securepassword123",
+            "authProvider": "local",
+            "fullName": "Неудачное Подтверждение",
+            "role": "Mentee"
+          }
+          """.trimIndent(),
+        )
+      }
+
+      val confirmResponse =
+        client.post("/api/users/confirm") {
+          contentType(ContentType.Application.Json)
+          setBody(
+            """
+            {
+              "email": "$testEmail",
+              "code": "000000"
+            }
+            """.trimIndent(),
+          )
+        }
+
+      assertEquals(HttpStatusCode.BadRequest, confirmResponse.status)
     }
 }
