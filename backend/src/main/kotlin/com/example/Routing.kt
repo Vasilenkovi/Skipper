@@ -2,7 +2,6 @@
 
 package com.example
 
-import com.example.core.DatabaseFactory
 import com.example.core.ErrorResponse
 import com.example.features.competences.CompetenceService
 import com.example.features.competences.competenceRoutes
@@ -22,7 +21,6 @@ import io.ktor.server.routing.routing
 import java.io.File
 
 fun Application.configureRouting() {
-  DatabaseFactory.init()
   val userService = UserService()
   val competenceService = CompetenceService()
   val slotService = SlotService()

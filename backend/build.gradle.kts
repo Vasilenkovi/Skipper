@@ -37,7 +37,15 @@ detekt {
   autoCorrect = false
 }
 
+tasks.test {
+  useJUnitPlatform()
+  testLogging {
+    events("passed", "skipped", "failed")
+  }
+}
+
 dependencies {
+  implementation("org.apache.commons:commons-email:1.5")
   implementation("io.ktor:ktor-server-status-pages")
   implementation("org.mindrot:jbcrypt:0.4")
   implementation("org.jetbrains.exposed:exposed-core:0.47.0")
@@ -52,11 +60,14 @@ dependencies {
   implementation(ktorLibs.server.core)
   implementation(ktorLibs.server.netty)
   implementation(libs.logback.classic)
+  implementation("io.ktor:ktor-server-auth-jvm")
+  implementation("io.ktor:ktor-server-auth-jwt-jvm")
 
   testImplementation(kotlin("test"))
   testImplementation(ktorLibs.server.testHost)
   testImplementation("com.h2database:h2:2.2.224")
 
-  implementation("io.ktor:ktor-server-auth-jvm")
-  implementation("io.ktor:ktor-server-auth-jwt-jvm")
+  testImplementation("org.testcontainers:testcontainers:1.19.7")
+  testImplementation("org.testcontainers:postgresql:1.19.7")
+  testImplementation("org.testcontainers:junit-jupiter:1.19.7")
 }
