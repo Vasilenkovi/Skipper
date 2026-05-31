@@ -28,6 +28,9 @@
         <activity android:name=".MobilePackage.CommonUI.CreateAccountActivity"
             android:exported="true" />
 
+        <activity android:name=".MobilePackage.CommonUI.PersonalProfileActivity"
+            android:exported="true" />
+
 
         <activity android:name=".MobilePackage.CommonUI.Tools.TestActivity"
             android:exported="true" />

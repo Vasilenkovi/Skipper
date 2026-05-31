@@ -1,0 +1,23 @@
+## Временные файлы Android Studio / IntelliJ IDEA
+#.idea/
+#*.iml
+#.gradle/
+#build/
+#captures/
+#externalNativeBuild/
+#.cxx/
+#local.properties
+#
+## Логи и временные файлы ОС
+#*.log
+#.DS_Store
+#thumbs.db
+#
+## Конфиденциальные данные
+#.env
+#secrets.xml
+#
+## Специфично для Gradle
+#/build
+#/*/build
+#.gradle
