@@ -14,6 +14,7 @@ import io.ktor.server.testing.testApplication
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import com.example.features.availability.AvailabilityWindows
 
 fun createTestDatabase(): Database =
   Database.connect(
@@ -26,7 +27,7 @@ fun createTestDatabase(): Database =
 fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
   val db = createTestDatabase()
   transaction(db) {
-    SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
+    SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews,AvailabilityWindows)
   }
   try {
     testApplication {
@@ -42,7 +43,7 @@ fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
     }
   } finally {
     transaction(db) {
-      SchemaUtils.drop(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
+      SchemaUtils.drop(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews,AvailabilityWindows)
     }
   }
 }

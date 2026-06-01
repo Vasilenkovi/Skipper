@@ -8,9 +8,9 @@ import java.util.Date
 object JwtConfig {
   private val secret =
     System.getenv("JWT_SECRET")
-      ?: throw IllegalArgumentException("Missing secret environment variable")
+      //?: throw IllegalArgumentException("Missing secret environment variable")
 
-  // для теста ?: "test-secret-key-for-local-runs"
+      ?: "test-secret-key-for-local-runs"
   private const val ISSUER = "skipper-backend"
   private const val VALIDITY_IN_MS = 3600000 * 24
 
