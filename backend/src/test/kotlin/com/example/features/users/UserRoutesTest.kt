@@ -1,11 +1,15 @@
 package com.example.features.users
 
 import com.example.testApplicationWithDb
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import org.jetbrains.exposed.sql.select
@@ -213,5 +217,127 @@ class UserRoutesTest {
         }
 
       assertEquals(HttpStatusCode.BadRequest, confirmResponse.status)
+    }
+
+  @Test
+  fun `test access protected profile without token returns 401 Unauthorized`() =
+    testApplicationWithDb {
+      // Пытаемся получить профиль "с улицы", без токена
+      val response = client.get("/api/users/profile")
+
+      // Сервер должен нас прогнать
+      assertEquals(HttpStatusCode.Unauthorized, response.status)
+    }
+
+  @Test
+  fun `test get profile with valid token returns 200 OK`() =
+    testApplicationWithDb {
+      val email = "get.profile@example.com"
+
+      client.post("/api/users/register") {
+        contentType(ContentType.Application.Json)
+        setBody(
+          """
+          {
+            "email": "$email",
+            "passwordHash": "securepassword",
+            "authProvider": "local",
+            "fullName": "Иван Профилев",
+            "role": "Expert"
+          }
+          """.trimIndent(),
+        )
+      }
+
+      var code = ""
+      transaction { code = Users.select { Users.email eq email }.single()[Users.confirmationCode] ?: "" }
+
+      val confirmResponse =
+        client.post("/api/users/confirm") {
+          contentType(ContentType.Application.Json)
+          setBody("""{"email": "$email", "code": "$code"}""")
+        }
+
+      val tokenRegex = Regex("\"token\"\\s*:\\s*\"([^\"]+)\"")
+      val token =
+        tokenRegex.find(confirmResponse.bodyAsText())?.groupValues?.get(1)
+          ?: throw AssertionError("Токен не найден! Ответ сервера: ${confirmResponse.bodyAsText()}")
+
+      val profileResponse =
+        client.get("/api/users/profile") {
+          header(HttpHeaders.Authorization, "Bearer $token")
+        }
+
+      assertEquals(
+        HttpStatusCode.OK,
+        profileResponse.status,
+        "Ожидался статус 200 OK при запросе профиля, но сервер вернул: ${profileResponse.status}. " +
+          "Тело ответа: ${profileResponse.bodyAsText()}",
+      )
+      assert(profileResponse.bodyAsText().contains("Иван Профилев"))
+    }
+
+  @Test
+  fun `test update profile with valid token changes data and returns 200 OK`() =
+    testApplicationWithDb {
+      val email = "update.profile@example.com"
+
+      client.post("/api/users/register") {
+        contentType(ContentType.Application.Json)
+        setBody(
+          """
+          {
+            "email": "$email",
+            "passwordHash": "pass",
+            "authProvider": "local",
+            "fullName": "Старое Имя",
+            "role": "Expert"
+          }
+          """.trimIndent(),
+        )
+      }
+
+      var code = ""
+      transaction { code = Users.select { Users.email eq email }.single()[Users.confirmationCode] ?: "" }
+
+      val confirmResp =
+        client.post("/api/users/confirm") {
+          contentType(ContentType.Application.Json)
+          setBody("""{"email": "$email", "code": "$code"}""")
+        }
+
+      val tokenRegex = Regex("\"token\"\\s*:\\s*\"([^\"]+)\"")
+      val token =
+        tokenRegex.find(confirmResp.bodyAsText())?.groupValues?.get(1)
+          ?: throw AssertionError("Токен не найден! Ответ: ${confirmResp.bodyAsText()}")
+
+      val updateResponse =
+        client.put("/api/users/update-profile") {
+          header(HttpHeaders.Authorization, "Bearer $token")
+          contentType(ContentType.Application.Json)
+          setBody(
+            """
+            {
+              "newFullName": "Новое Имя",
+              "contactInfo": "@new_telegram",
+              "newExperienceDescription": "Обновленная биография"
+            }
+            """.trimIndent(),
+          )
+        }
+
+      assertEquals(
+        HttpStatusCode.OK,
+        updateResponse.status,
+        "Ожидался статус 200 OK при обновлении, но сервер вернул: ${updateResponse.status}.",
+      )
+      val verifyProfileResponse =
+        client.get("/api/users/profile") {
+          header(HttpHeaders.Authorization, "Bearer $token")
+        }
+
+      val verifyBody = verifyProfileResponse.bodyAsText()
+      assert(verifyBody.contains("Новое Имя")) { "Профиль не обновил имя! Тело: $verifyBody" }
+      assert(verifyBody.contains("@new_telegram")) { "Профиль не обновил контакт! Тело: $verifyBody" }
     }
 }

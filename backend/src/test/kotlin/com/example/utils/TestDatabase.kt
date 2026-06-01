@@ -18,10 +18,18 @@ object TestDatabase {
 
   private var isInitialized = false
 
+  val jdbcUrl: String get() = postgresContainer.jdbcUrl
+  val username: String get() = postgresContainer.username
+  val password: String get() = postgresContainer.password
+
   fun init() {
     if (isInitialized) return
 
     postgresContainer.start()
+
+    System.setProperty("DATABASE_URL", postgresContainer.jdbcUrl)
+    System.setProperty("DATABASE_USER", postgresContainer.username)
+    System.setProperty("DATABASE_PASSWORD", postgresContainer.password)
 
     Database.connect(
       url = postgresContainer.jdbcUrl,
