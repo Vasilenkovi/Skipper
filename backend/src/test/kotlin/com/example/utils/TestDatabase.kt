@@ -9,38 +9,46 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.testcontainers.containers.PostgreSQLContainer
 
 object TestDatabase {
-  private val postgresContainer =
-    PostgreSQLContainer<Nothing>("postgres:15-alpine").apply {
-      withDatabaseName("skipper_test")
-      withUsername("test_user")
-      withPassword("test_pass")
+    private val postgresContainer =
+        PostgreSQLContainer<Nothing>("postgres:15-alpine").apply {
+            withDatabaseName("skipper_test")
+            withUsername("test_user")
+            withPassword("test_pass")
+        }
+
+    private var isInitialized = false
+
+    val jdbcUrl: String get() = postgresContainer.jdbcUrl
+    val username: String get() = postgresContainer.username
+    val password: String get() = postgresContainer.password
+
+    fun init() {
+        if (isInitialized) return
+
+        postgresContainer.start()
+
+        System.setProperty("DATABASE_URL", postgresContainer.jdbcUrl)
+        System.setProperty("DATABASE_USER", postgresContainer.username)
+        System.setProperty("DATABASE_PASSWORD", postgresContainer.password)
+
+        Database.connect(
+            url = postgresContainer.jdbcUrl,
+            driver = "org.postgresql.Driver",
+            user = postgresContainer.username,
+            password = postgresContainer.password,
+        )
+
+        transaction {
+            SchemaUtils.create(Users, ExpertProfiles)
+        }
+
+        isInitialized = true
     }
 
-  private var isInitialized = false
-
-  fun init() {
-    if (isInitialized) return
-
-    postgresContainer.start()
-
-    Database.connect(
-      url = postgresContainer.jdbcUrl,
-      driver = "org.postgresql.Driver",
-      user = postgresContainer.username,
-      password = postgresContainer.password,
-    )
-
-    transaction {
-      SchemaUtils.create(Users, ExpertProfiles)
+    fun clearTables() {
+        transaction {
+            ExpertProfiles.deleteAll()
+            Users.deleteAll()
+        }
     }
-
-    isInitialized = true
-  }
-
-  fun clearTables() {
-    transaction {
-      ExpertProfiles.deleteAll()
-      Users.deleteAll()
-    }
-  }
 }
