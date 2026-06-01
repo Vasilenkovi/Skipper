@@ -1,7 +1,9 @@
 package com.example.core
 
+import com.example.features.availability.AvailabilityWindows
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
+import com.example.features.consultations.Consultations
 import com.example.features.reviews.Reviews
 import com.example.features.slots.Slots
 import com.example.features.users.ExpertProfiles
@@ -39,6 +41,8 @@ object DatabaseFactory {
         ExpertCompetences,
         Slots,
         Reviews,
+        AvailabilityWindows,
+        Consultations,
       )
     }
   }

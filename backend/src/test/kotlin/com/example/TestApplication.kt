@@ -2,8 +2,10 @@
 
 package com.example
 
+import com.example.features.availability.AvailabilityWindows
 import com.example.features.competences.Competences
 import com.example.features.competences.ExpertCompetences
+import com.example.features.consultations.Consultations
 import com.example.features.reviews.Reviews
 import com.example.features.slots.Slots
 import com.example.features.users.ExpertProfiles
@@ -26,7 +28,16 @@ fun createTestDatabase(): Database =
 fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
   val db = createTestDatabase()
   transaction(db) {
-    SchemaUtils.create(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
+    SchemaUtils.create(
+      Users,
+      ExpertProfiles,
+      Competences,
+      ExpertCompetences,
+      Slots,
+      Reviews,
+      AvailabilityWindows,
+      Consultations,
+    )
   }
   try {
     testApplication {
@@ -42,7 +53,16 @@ fun testApplicationWithDb(block: suspend ApplicationTestBuilder.() -> Unit) {
     }
   } finally {
     transaction(db) {
-      SchemaUtils.drop(Users, ExpertProfiles, Competences, ExpertCompetences, Slots, Reviews)
+      SchemaUtils.drop(
+        Users,
+        ExpertProfiles,
+        Competences,
+        ExpertCompetences,
+        Slots,
+        Reviews,
+        AvailabilityWindows,
+        Consultations,
+      )
     }
   }
 }
