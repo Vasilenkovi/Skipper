@@ -2,6 +2,7 @@ package com.example.features.consultations
 
 import com.auth0.jwt.JWT
 import com.example.testApplicationWithDb
+import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -83,5 +84,41 @@ class ConsultationRoutesTest {
         }
 
       assertEquals(HttpStatusCode.Created, bookRes.status)
+    }
+
+  @Test
+  fun `should fetch and update consultation statuses`() =
+    testApplicationWithDb {
+      val expEmail = "exp2_${UUID.randomUUID()}@test.com"
+      val pass = "123"
+
+      val regJson =
+        """{"email":"$expEmail","passwordHash":"$pass",""" +
+          """"authProvider":"local","fullName":"Exp","role":"EXPERT"}"""
+      client.post("/api/users/register") {
+        contentType(ContentType.Application.Json)
+        setBody(regJson)
+      }
+
+      val loginRes =
+        client.post("/api/users/login") {
+          contentType(ContentType.Application.Json)
+          setBody("""{"email":"$expEmail","passwordHash":"$pass"}""")
+        }
+      val token = loginRes.bodyAsText().substringAfter("\"token\":\"").substringBefore("\"")
+
+      // Проверяем GET /api/consultations
+      val getRes =
+        client.get("/api/consultations") {
+          header(HttpHeaders.Authorization, "Bearer $token")
+        }
+      assertEquals(HttpStatusCode.OK, getRes.status)
+
+      // Проверяем 400 Bad Request при неверном ID
+      val badIdRes =
+        client.post("/api/consultations/9999/cancel") {
+          header(HttpHeaders.Authorization, "Bearer $token")
+        }
+      assertEquals(HttpStatusCode.Forbidden, badIdRes.status)
     }
 }

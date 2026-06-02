@@ -5,8 +5,10 @@ import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 import java.time.LocalDateTime
 
 class ConsultationService {
@@ -54,4 +56,56 @@ class ConsultationService {
       }
     }
   }
+
+  fun getConsultationsForUser(userId: String): List<ConsultationResponse> =
+    transaction {
+      Consultations
+        .selectAll()
+        .where { (Consultations.expertId eq userId) or (Consultations.menteeId eq userId) }
+        .map {
+          ConsultationResponse(
+            id = it[Consultations.id],
+            expertId = it[Consultations.expertId],
+            menteeId = it[Consultations.menteeId],
+            startTime = it[Consultations.startTime].toString(),
+            endTime = it[Consultations.endTime].toString(),
+            status = it[Consultations.status],
+            meetingLink = it[Consultations.meetingLink],
+          )
+        }
+    }
+
+  fun confirmConsultation(
+    consultationId: Int,
+    expertId: String,
+  ): Boolean =
+    transaction {
+      Consultations.update({ (Consultations.id eq consultationId) and (Consultations.expertId eq expertId) }) {
+        it[status] = "PLANNED"
+      } > 0
+    }
+
+  fun cancelConsultation(
+    consultationId: Int,
+    userId: String,
+  ): Boolean =
+    transaction {
+      Consultations.update({
+        (Consultations.id eq consultationId) and
+          ((Consultations.expertId eq userId) or (Consultations.menteeId eq userId))
+      }) {
+        it[status] = "CANCELLED"
+      } > 0
+    }
+
+  fun attachMeetingLink(
+    consultationId: Int,
+    expertId: String,
+    link: String,
+  ): Boolean =
+    transaction {
+      Consultations.update({ (Consultations.id eq consultationId) and (Consultations.expertId eq expertId) }) {
+        it[meetingLink] = link
+      } > 0
+    }
 }

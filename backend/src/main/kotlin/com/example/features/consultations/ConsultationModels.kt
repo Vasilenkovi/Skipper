@@ -19,3 +19,8 @@ data class ConsultationResponse(
   val status: String,
   val meetingLink: String? = null,
 )
+
+@Serializable
+data class AttachMeetingLinkRequest(
+  val meetingLink: String,
+)
