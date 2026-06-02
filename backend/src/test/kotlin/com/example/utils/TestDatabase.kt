@@ -1,5 +1,10 @@
 package com.example.utils
 
+import com.example.features.availability.AvailabilityWindows
+import com.example.features.competences.Competences
+import com.example.features.competences.ExpertCompetences
+import com.example.features.consultations.Consultations
+import com.example.features.reviews.Reviews
 import com.example.features.users.ExpertProfiles
 import com.example.features.users.Users
 import org.jetbrains.exposed.sql.Database
@@ -39,7 +44,15 @@ object TestDatabase {
     )
 
     transaction {
-      SchemaUtils.create(Users, ExpertProfiles)
+      SchemaUtils.create(
+        Users,
+        ExpertProfiles,
+        Competences,
+        ExpertCompetences,
+        Reviews,
+        AvailabilityWindows,
+        Consultations
+      )
     }
 
     isInitialized = true
@@ -47,6 +60,11 @@ object TestDatabase {
 
   fun clearTables() {
     transaction {
+      Consultations.deleteAll()
+      AvailabilityWindows.deleteAll()
+      Reviews.deleteAll()
+      ExpertCompetences.deleteAll()
+      Competences.deleteAll()
       ExpertProfiles.deleteAll()
       Users.deleteAll()
     }

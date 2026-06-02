@@ -1,4 +1,4 @@
-@file:Suppress("UnusedPrivateProperty")
+@file:Suppress("UnusedPrivateProperty", "SpellCheckingInspection")
 
 package com.example
 
@@ -20,7 +20,6 @@ class ApiContractTest {
       val response =
         client.post("/api/users/register") {
           contentType(ContentType.Application.Json)
-          // Добавили обязательные поля, которые ждет бэкенд:
           setBody(
             """
             {
@@ -28,7 +27,7 @@ class ApiContractTest {
                 "passwordHash": "123",
                 "authProvider": "local",
                 "fullName": "Contract Tester",
-                "role": "Mentee"
+                "role": "MENTEE"
             }
             """.trimIndent(),
           )
@@ -45,21 +44,28 @@ class ApiContractTest {
         setBody(
           """
           {
-              "email": "t@t.com",
+              "email": "login@test.com",
               "passwordHash": "123",
               "authProvider": "local",
               "fullName": "Contract Tester",
-              "role": "Mentee"
+              "role": "MENTEE"
           }
           """.trimIndent(),
         )
       }
 
-      // Затем логинимся (используем passwordHash вместо password)
+      // Затем логинимся
       val response =
         client.post("/api/users/login") {
           contentType(ContentType.Application.Json)
-          setBody("""{"email":"login@test.com","passwordHash":"123"}""")
+          setBody(
+            """
+            {
+                "email": "login@test.com",
+                "passwordHash": "123"
+            }
+            """.trimIndent(),
+          )
         }
 
       assertEquals(HttpStatusCode.OK, response.status, "Логин должен возвращать статус 200 OK")

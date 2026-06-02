@@ -3,8 +3,12 @@
 package com.example
 
 import com.example.core.ErrorResponse
+import com.example.features.availability.AvailabilityService
+import com.example.features.availability.availabilityRoutes
 import com.example.features.competences.CompetenceService
 import com.example.features.competences.competenceRoutes
+import com.example.features.consultations.ConsultationService
+import com.example.features.consultations.consultationRoutes
 import com.example.features.reviews.ReviewService
 import com.example.features.reviews.reviewRouting
 import com.example.features.slots.SlotService
@@ -25,6 +29,8 @@ fun Application.configureRouting() {
   val competenceService = CompetenceService()
   val slotService = SlotService()
   val reviewService = ReviewService()
+  val consultationService = ConsultationService()
+  val availabilityService = AvailabilityService()
 
   // Устанавливаем глобальный перехватчик ошибок
   install(StatusPages) {
@@ -42,6 +48,8 @@ fun Application.configureRouting() {
     competenceRoutes(competenceService)
     slotRoutes(slotService)
     reviewRouting(reviewService)
+    consultationRoutes(consultationService)
+    availabilityRoutes(availabilityService)
 
     staticFiles("/uploads", File("uploads"))
   }
