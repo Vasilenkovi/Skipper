@@ -243,7 +243,7 @@ class UserRoutesTest {
             "passwordHash": "securepassword",
             "authProvider": "local",
             "fullName": "Иван Профилев",
-            "role": "Expert"
+            "role": "Mentor"
           }
           """.trimIndent(),
         )
@@ -291,7 +291,7 @@ class UserRoutesTest {
             "passwordHash": "pass",
             "authProvider": "local",
             "fullName": "Старое Имя",
-            "role": "Expert"
+            "role": "Mentor"
           }
           """.trimIndent(),
         )

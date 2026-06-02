@@ -51,7 +51,7 @@ object TestDatabase {
         ExpertCompetences,
         Reviews,
         AvailabilityWindows,
-        Consultations
+        Consultations,
       )
     }
 
