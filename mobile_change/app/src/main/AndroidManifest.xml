@@ -37,6 +37,9 @@
         <activity android:name=".MobilePackage.CommonUI.FindingMentorActivity"
             android:exported="true" />
 
+        <activity android:name=".MobilePackage.CommonUI.MentorsPageActivity"
+            android:exported="true" />
+
 
         <activity android:name=".MobilePackage.CommonUI.Tools.TestActivity"
             android:exported="true" />
