@@ -1,0 +1,5 @@
+toml
+[plugins]
+android-application = { id = "com.android.application", version = "8.7.0" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version = "2.0.0" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version = "2.0.0" }
