@@ -28,7 +28,7 @@
         <activity android:name=".MobilePackage.CommonUI.FirstSteps.CreateAccountActivity"
             android:exported="true" />
 
-        <activity android:name=".MobilePackage.CommonUI.PersonalProfileActivity"
+        <activity android:name=".MobilePackage.CommonUI.Profiles.PersonalProfileActivity"
             android:exported="true" />
 
         <activity android:name=".MobilePackage.CommonUI.FirstSteps.FillingAccountActivity"
@@ -50,7 +50,7 @@
 
         <activity android:name=".MobilePackage.CommonUI.MentorInterface.ChatsActivity"/>
 
-        <activity android:name=".MobilePackage.CommonUI.MentiProfileActivity"
+        <activity android:name=".MobilePackage.CommonUI.Profiles.MentiProfileActivity"
             android:exported="true" />
     </application>
 

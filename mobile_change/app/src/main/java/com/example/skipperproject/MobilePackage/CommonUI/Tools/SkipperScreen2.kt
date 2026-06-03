@@ -79,23 +79,22 @@ fun SkipperScreen2(
                     Spacer(modifier = Modifier.width(16.dp))
                 }
                 
-                // Логотип и текст Skipper
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.skipper_logo),
-                        contentDescription = "Logo",
-                        modifier = Modifier.size(156.dp)
-                    )
-                }
+                // Логотип
+                Image(
+                    painter = painterResource(id = R.drawable.skipper_logo),
+                    contentDescription = "Logo",
+                    modifier = Modifier.size(156.dp)
+                )
             }
 
             // Кнопки навигации (IconButton)
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = onMenuClick) {
+                IconButton(
+                    onClick = onMenuClick,
+                    modifier = Modifier.size(48.dp)
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.menu_icon),
                         contentDescription = "Menu",
@@ -103,7 +102,10 @@ fun SkipperScreen2(
                         tint = Color.Black
                     )
                 }
-                IconButton(onClick = onNotificationsClick) {
+                IconButton(
+                    onClick = onNotificationsClick,
+                    modifier = Modifier.size(48.dp)
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.notification_icon),
                         contentDescription = "Notifications",
@@ -111,7 +113,10 @@ fun SkipperScreen2(
                         tint = Color.Black
                     )
                 }
-                IconButton(onClick = onProfileClick) {
+                IconButton(
+                    onClick = onProfileClick,
+                    modifier = Modifier.size(48.dp)
+                ) {
                     Icon(
                         painter = painterResource(R.drawable.profile_icon),
                         contentDescription = "Profile",
