@@ -45,7 +45,7 @@ jobs:
         env:
           JWT_SECRET: test-secret-key-for-contract-testing
       - name: Run Security and Route Tests
-        run: ./gradlew test --tests "ApiSecurityTest" --tests "*RoutesTest" --no-daemon
+        run: ./gradlew test --tests "ApiSecurityTest" --tests "AvailabilityRoutesTest" --tests "*RoutesTest" --no-daemon
         working-directory: backend
 
       - name: Validate OpenAPI Spec
