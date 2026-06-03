@@ -1,5 +1,6 @@
 package com.example.skipperproject.MobilePackage.CommonUI
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Interval
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -135,7 +138,10 @@ fun PasswordInput(value: String, onValueChange: (String) -> Unit, onLoginClick: 
             )
             Spacer(modifier = Modifier.width(12.dp))
             IconButton(
-                onClick = onLoginClick,
+                onClick = {
+
+
+                },
                 modifier = Modifier.size(56.dp)
             ) {
                 Icon(
@@ -167,6 +173,8 @@ fun ForgotPassword(interactionSource: MutableInteractionSource, onClick: () -> U
 
 @Composable
 fun RegistrationFooter(interactionSource: MutableInteractionSource, onRegisterClick: () -> Unit) {
+    val context = LocalContext.current
+
     Row {
         Text(
             text = stringResource(R.string.no_account) + " ",
@@ -182,6 +190,9 @@ fun RegistrationFooter(interactionSource: MutableInteractionSource, onRegisterCl
                 indication = null
             ) {
                 onRegisterClick()
+                val intent1 = Intent(context, CreateAccountActivity::class.java)
+                context.startActivity(intent1)
+
             }
         )
     }

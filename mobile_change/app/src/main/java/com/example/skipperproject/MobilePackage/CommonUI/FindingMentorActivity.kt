@@ -19,12 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
+import com.example.skipperproject.R
 
 class FindingMentorActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,12 +89,17 @@ fun FindingMentorScreen() {
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "Search",
-                    modifier = Modifier.size(36.dp),
-                    tint = Color.Gray
-                )
+                IconButton(
+                    onClick = { /* TODO: Логика поиска */ },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.search_icon),
+                        contentDescription = "Search",
+                        modifier = Modifier.size(28.dp),
+                        tint = Color.Gray
+                    )
+                }
                 Spacer(modifier = Modifier.width(12.dp))
                 CustomTextField(
                     value = searchQuery,
@@ -121,7 +128,7 @@ fun FindingMentorScreen() {
                 TagChip("Бизнес", isSelected = true)
                 TagChip("Логистика", isSelected = true)
                 TagChip("Веб-дизайн", isSelected = false)
-                TagChip("Психология", isSelected = false)
+
             }
 
             Spacer(modifier = Modifier.height(24.dp))

@@ -1,5 +1,6 @@
 package com.example.skipperproject.MobilePackage.CommonUI
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +55,7 @@ fun MainFunc() {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            StartSearchButton(onClick = { /* Логика перехода */ })
+            StartSearchButton()
 
             Spacer(modifier = Modifier.height(64.dp))
         }
@@ -96,10 +98,14 @@ fun FindMentorMessage() {
 }
 
 @Composable
-fun StartSearchButton(onClick: () -> Unit) {
+fun StartSearchButton() {
+    val context = LocalContext.current
     Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         Button(
-            onClick = onClick,
+            onClick = {
+                val intent = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent)
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SkipperColors.mainYellow,
                 contentColor = Color.Black

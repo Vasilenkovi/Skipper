@@ -1,5 +1,7 @@
 package com.example.skipperproject.MobilePackage.CommonUI
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -163,6 +166,8 @@ fun ConfirmationRow(interactionSource: MutableInteractionSource) {
 
 @Composable
 fun LoginRedirectFooter(interactionSource: MutableInteractionSource) {
+    val context = LocalContext.current
+
     Row {
         Text(
             text = stringResource(R.string.have_account) + " ",
@@ -178,7 +183,8 @@ fun LoginRedirectFooter(interactionSource: MutableInteractionSource) {
                 interactionSource = interactionSource,
                 indication = null
             ) {
-                /* Переход на LoginActivity */
+                val intent1 = Intent(context, LoginActivity::class.java)
+                context.startActivity(intent1)
             }
         )
     }
