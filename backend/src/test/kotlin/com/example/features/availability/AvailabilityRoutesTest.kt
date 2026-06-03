@@ -13,9 +13,9 @@ import io.ktor.http.contentType
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.Assert.assertEquals
-import org.junit.Test
 import java.util.UUID
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class AvailabilityRoutesTest {
