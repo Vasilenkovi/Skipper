@@ -1,15 +1,36 @@
+# Gradle files
+.gradle/
+build/
+/*/build/
+
+# Kotlin
+.kotlin/
+kotlin-daemon-*.sys.err
+kotlin-daemon-*.sys.out
+
+# IntelliJ IDEA
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.ipr
+*.iws
+
+# Android Studio
 local.properties
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+output.json
+
+# Signing files
+*.jks
+*.keystore
+*.p12
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.apk
+*.aab
