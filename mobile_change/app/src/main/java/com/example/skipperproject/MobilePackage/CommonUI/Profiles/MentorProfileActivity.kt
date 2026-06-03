@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
 
-class PersonalProfileActivity : ComponentActivity() {
+class MentorProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

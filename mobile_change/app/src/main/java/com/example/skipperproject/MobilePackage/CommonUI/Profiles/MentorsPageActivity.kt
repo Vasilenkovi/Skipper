@@ -1,4 +1,4 @@
-package com.example.skipperproject.MobilePackage.CommonUI.Mentors
+package com.example.skipperproject.MobilePackage.CommonUI.Profiles
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
