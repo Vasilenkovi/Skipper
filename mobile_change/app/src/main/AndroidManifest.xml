@@ -34,6 +34,9 @@
         <activity android:name=".MobilePackage.CommonUI.FillingAccountActivity"
             android:exported="true" />
 
+        <activity android:name=".MobilePackage.CommonUI.FindingMentorActivity"
+            android:exported="true" />
+
 
         <activity android:name=".MobilePackage.CommonUI.Tools.TestActivity"
             android:exported="true" />
