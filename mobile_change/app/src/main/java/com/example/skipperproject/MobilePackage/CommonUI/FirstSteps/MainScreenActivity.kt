@@ -1,4 +1,4 @@
-package com.example.skipperproject.MobilePackage.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI.FirstSteps
 
 import android.content.Intent
 import android.os.Bundle

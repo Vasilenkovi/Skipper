@@ -1,5 +1,6 @@
-package com.example.skipperproject.MobilePackage.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI.FirstSteps
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,12 +14,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.skipperproject.MobilePackage.CommonUI.FindingMentorActivity
 import com.example.skipperproject.R
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.CustomTextField
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.SkipperScreen
@@ -40,6 +43,7 @@ class FillingAccountActivity : ComponentActivity() {
 @Composable
 fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     SkipperScreen(backgroundColor = Color(0xFFE8E8E8)) {
         Column(
@@ -110,7 +114,11 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { viewModel.saveData() },
+                onClick = { viewModel.saveData()
+                           val intent = Intent(context, FindingMentorActivity::class.java)
+                           context.startActivity(intent)
+
+                          },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .height(30.dp),

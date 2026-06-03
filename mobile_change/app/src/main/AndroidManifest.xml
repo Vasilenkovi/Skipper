@@ -14,7 +14,7 @@
         
 
 
-        <activity android:name=".MobilePackage.CommonUI.MainScreenActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,16 +22,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MobilePackage.CommonUI.LoginActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.LoginActivity"
             android:exported="true" />
 
-        <activity android:name=".MobilePackage.CommonUI.CreateAccountActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.CreateAccountActivity"
             android:exported="true" />
 
         <activity android:name=".MobilePackage.CommonUI.PersonalProfileActivity"
             android:exported="true" />
 
-        <activity android:name=".MobilePackage.CommonUI.FillingAccountActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.FillingAccountActivity"
             android:exported="true" />
 
         <activity android:name=".MobilePackage.CommonUI.FindingMentorActivity"

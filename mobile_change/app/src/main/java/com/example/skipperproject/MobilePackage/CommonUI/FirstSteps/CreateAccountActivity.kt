@@ -1,6 +1,5 @@
-package com.example.skipperproject.MobilePackage.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI.FirstSteps
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -40,6 +39,7 @@ class CreateAccountActivity : ComponentActivity() {
 
 @Composable
 fun CreateAccountScreen() {
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
@@ -96,6 +96,7 @@ fun CreateAccountScreen() {
     }
 }
 
+
 @Composable
 fun RegistrationHeader() {
     Surface(
@@ -129,12 +130,17 @@ fun NumberedInputSection(label: String, value: String, onValueChange: (String) -
 
 @Composable
 fun ConfirmationRow(interactionSource: MutableInteractionSource) {
+    val context = LocalContext.current
+    var showEmailDialog by remember { mutableStateOf(false) }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
         Button(
-            onClick = { /* Логика подтверждения */ },
+            onClick = {
+                showEmailDialog = true
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SkipperColors.mainYellow,
                 contentColor = Color.Black
@@ -162,12 +168,23 @@ fun ConfirmationRow(interactionSource: MutableInteractionSource) {
             }
         )
     }
+
+    if (showEmailDialog) {
+        EmailConfirmedDialog(
+            onDismiss = { showEmailDialog = false },
+            onContinue = {
+                showEmailDialog = false
+                // Переход на главный экран
+                val intent = Intent(context, FillingAccountActivity::class.java)
+                context.startActivity(intent)
+            }
+        )
+    }
 }
 
 @Composable
 fun LoginRedirectFooter(interactionSource: MutableInteractionSource) {
     val context = LocalContext.current
-
     Row {
         Text(
             text = stringResource(R.string.have_account) + " ",

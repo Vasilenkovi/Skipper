@@ -1,4 +1,4 @@
-package com.example.skipperproject.MobilePackage.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI.FirstSteps
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
