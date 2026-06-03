@@ -22,6 +22,9 @@ captures/
 .cxx/
 output.json
 
+# Memory dumps
+*.hprof
+
 # Signing files
 *.jks
 *.keystore
