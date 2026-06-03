@@ -19,13 +19,13 @@ fun CustomTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Используем BasicTextField для полного контроля над высотой и центровкой
+
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()
-            .height(42.dp) // Ваша фиксированная высота
+            .height(42.dp)
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(SkipperDimensions.inputFieldRound)
@@ -34,15 +34,14 @@ fun CustomTextField(
         singleLine = true,
         cursorBrush = SolidColor(Color.Black),
         decorationBox = { innerTextField ->
-            // Этот контейнер отвечает за центровку текста внутри 42.dp
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp), // Горизонтальный отступ как в оригинале
+                    .padding(horizontal = 16.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
                 if (value.isEmpty()) {
-                    // Здесь можно добавить placeholder, если он понадобится
                 }
                 innerTextField()
             }

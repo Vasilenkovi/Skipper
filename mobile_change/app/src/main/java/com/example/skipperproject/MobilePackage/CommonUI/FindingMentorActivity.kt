@@ -37,40 +37,63 @@ class FindingMentorActivity : ComponentActivity() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun FindingMentorScreen() {
     var searchQuery by remember { mutableStateOf("") }
 
-    // Тестовые данные
+    // Тестовые данные для сетки
     val mentors = listOf(
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук, победитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук, победитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук, победитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук, победитель всех на свете")
+        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
+        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
+        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
+        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете")
     )
 
     SkipperScreen2 {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-            Spacer(modifier = Modifier.height(24.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp)
+        ) {
+            Spacer(modifier = Modifier.height(28.dp))
 
+            // Заголовок: "Приём, Skipper? Нужна помощь"
             Text(
                 text = "Приём, Skipper?\nНужна помощь",
-                style = MobileTextStyles.MainScreenText.copy(fontSize = 32.sp, lineHeight = 36.sp),
+                style = MobileTextStyles.MainScreenText.copy(
+                    fontSize = 38.sp,
+                    lineHeight = 40.sp,
+                    letterSpacing = (-1.5).sp
+                ),
+                color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            Text("Найди того, кто тебе нужен", style = MobileTextStyles.QuestionText, fontWeight = FontWeight.Bold)
+            // "Найди того, кто тебе нужен"
+            Text(
+                text = "Найди того, кто тебе нужен",
+                style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold
+            )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Поиск с кнопкой-лупой
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = { /* Логика поиска */ }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search", modifier = Modifier.size(32.dp))
-                }
+            // Поиск
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                    modifier = Modifier.size(36.dp),
+                    tint = Color.Gray
+                )
+                Spacer(modifier = Modifier.width(12.dp))
                 CustomTextField(
                     value = searchQuery,
                     onValueChange = { searchQuery = it },
@@ -78,31 +101,41 @@ fun FindingMentorScreen() {
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(28.dp))
 
-            Text("Популярные #теги", style = MobileTextStyles.QuestionText, fontWeight = FontWeight.Bold)
+            // "Популярные #теги"
+            Text(
+                text = "Популярные #теги",
+                style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // Теги (теперь кликабельные)
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                TagChip("Бизнес", isSelected = true, onClick = { /* Навигация по тегу Бизнес */ })
-                TagChip("Логистика", isSelected = true, onClick = { /* Навигация по тегу Логистика */ })
-                TagChip("Веб-дизайн", isSelected = false, onClick = { /* Навигация по тегу Веб-дизайн */ })
-                TagChip("Психология", isSelected = false, onClick = { /* Навигация по тегу Психология */ })
+            // Список тегов
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                TagChip("Бизнес", isSelected = true)
+                TagChip("Логистика", isSelected = true)
+                TagChip("Веб-дизайн", isSelected = false)
+                TagChip("Психология", isSelected = false)
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Сетка менторов
+            // Сетка карточек менторов
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(bottom = 20.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(mentors) { mentor ->
-                    MentorGridCard(mentor, onClick = { /* Переход в профиль ментора */ })
+                    MentorGridCard(mentor)
                 }
             }
         }
@@ -110,60 +143,68 @@ fun FindingMentorScreen() {
 }
 
 @Composable
-fun TagChip(text: String, isSelected: Boolean, onClick: () -> Unit) {
+fun TagChip(text: String, isSelected: Boolean, onClick: () -> Unit = {}) {
     Surface(
-        color = if (isSelected) Color(0xFF444444) else Color(0xFFBBBBBB),
-        shape = RoundedCornerShape(4.dp),
+        color = if (isSelected) Color(0xFF444444) else Color(0xFF999999),
+        shape = RoundedCornerShape(6.dp),
         modifier = Modifier.clickable { onClick() }
     ) {
         Text(
             text = text,
-            modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-            style = MobileTextStyles.SmallestText,
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+            style = MobileTextStyles.SmallestText.copy(fontSize = 14.sp),
             color = Color.White
         )
     }
 }
 
 @Composable
-fun MentorGridCard(mentor: Mentor, onClick: () -> Unit) {
+fun MentorGridCard(mentor: Mentor, onClick: () -> Unit = {}) {
     Card(
         modifier = Modifier
-            .aspectRatio(0.75f)
-            .clickable { onClick() }, // Сделали карточку кликабельной
+            .fillMaxWidth()
+            .aspectRatio(0.72f)
+            .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.DarkGray)
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF555555))
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
-            // Фотография ментора
-            if (mentor.photo != null) {
+            // Фон/Фото
+            mentor.photo?.let {
                 Image(
-                    painter = mentor.photo,
+                    painter = it,
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             }
 
-            // Информация поверх фото (градиент или полупрозрачный фон внизу)
+            // Текст снизу
             Column(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.4f))
-                    .padding(8.dp)
+                    .padding(12.dp)
             ) {
                 Text(
                     text = mentor.name,
-                    style = MobileTextStyles.SmallestText.copy(fontSize = 13.sp, lineHeight = 15.sp),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
+                    style = MobileTextStyles.SmallestText.copy(
+                        fontSize = 16.sp,
+                        lineHeight = 18.sp,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = Color.White
                 )
-                Spacer(Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = mentor.description,
-                    style = MobileTextStyles.SmallestText.copy(fontSize = 10.sp, lineHeight = 11.sp),
-                    color = Color.LightGray
+                    style = MobileTextStyles.SmallestText.copy(
+                        fontSize = 10.sp,
+                        lineHeight = 12.sp,
+                        fontWeight = FontWeight.Normal
+                    ),
+                    color = Color.White.copy(alpha = 0.85f),
+                    maxLines = 2
                 )
             }
         }
