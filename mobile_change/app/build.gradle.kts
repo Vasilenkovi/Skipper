@@ -40,6 +40,15 @@ android {
 }
 
 dependencies {
+
+
+
+        // Базовый набор (Menu, Person, и т.д.)
+    implementation("androidx.compose.material:material-icons-core")
+        // Расширенный набор (Edit, Notifications и еще тысячи)
+    implementation("androidx.compose.material:material-icons-extended")
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

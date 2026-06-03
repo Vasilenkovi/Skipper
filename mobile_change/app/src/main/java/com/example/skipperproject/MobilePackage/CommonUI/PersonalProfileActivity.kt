@@ -7,10 +7,11 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Menu
+// Используем набор Rounded для более мягкого стиля
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material.icons.rounded.Notifications
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -64,7 +65,7 @@ fun PersonalProfileScreen() {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     CourseYellowCard(
                         title = "Путь к успеху",
-                        description = "Становимся крутыми за пару занятий. Еще какой-нибудь текст, можно многое что написать. Просто описание. Текст.",
+                        description = "Становимся крутыми за пару занятий. Еще какой-нибудь текст, можно многое что написать.",
                         price = "10.000 ₽"
                     )
                     CourseYellowCard(
@@ -109,7 +110,6 @@ fun PersonalProfileScreen() {
 
             Spacer(modifier = Modifier.height(24.dp))
             
-            // Нижняя панель навигации (как на макете)
             BottomNavBarMock()
             
             Spacer(modifier = Modifier.height(24.dp))
@@ -131,7 +131,8 @@ fun ProfileHeaderCard() {
                     fontWeight = FontWeight.Bold
                 )
                 Spacer(Modifier.width(8.dp))
-                Icon(Icons.Default.Edit, null, Modifier.size(14.dp), Color.Gray)
+                // Используем Icons.Rounded.Edit
+                Icon(Icons.Rounded.Edit, contentDescription = "Edit", Modifier.size(14.dp), Color.Gray)
                 Spacer(Modifier.weight(1f))
                 Surface(color = SkipperColors.mainYellow, shape = RoundedCornerShape(12.dp)) {
                     Text(
@@ -174,7 +175,7 @@ fun SectionCard(title: String, content: @Composable () -> Unit) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(title, style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp), fontWeight = FontWeight.Bold)
                 Spacer(Modifier.width(8.dp))
-                Icon(Icons.Default.Edit, null, Modifier.size(14.dp), Color.Gray)
+                Icon(Icons.Rounded.Edit, contentDescription = "Edit", Modifier.size(14.dp), Color.Gray)
             }
             Spacer(Modifier.height(12.dp))
             content()
@@ -193,7 +194,6 @@ fun CalendarSection() {
             }
         }
         Spacer(Modifier.height(8.dp))
-        // Пример сетки (9-15 мая)
         Row(Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
             for (i in 9..15) {
                 CalendarDayCell(day = i.toString(), isSelected = i == 11, isDark = i < 11)
@@ -219,9 +219,10 @@ fun BottomNavBarMock() {
                 Text("Skipper", style = MobileTextStyles.QuestionText, fontWeight = FontWeight.Bold)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Icon(Icons.Default.Menu, null)
-                Icon(Icons.Default.Notifications, null)
-                Icon(Icons.Default.Person, null)
+                // Используем закругленные версии
+                Icon(Icons.Rounded.Menu, contentDescription = "Menu")
+                Icon(Icons.Rounded.Notifications, contentDescription = "Notifications")
+                Icon(Icons.Rounded.Person, contentDescription = "Profile")
             }
         }
     }
