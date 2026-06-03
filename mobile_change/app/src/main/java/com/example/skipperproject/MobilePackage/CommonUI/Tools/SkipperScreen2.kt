@@ -97,7 +97,7 @@ fun SkipperScreen2(
             ) {
                 IconButton(onClick = onMenuClick) {
                     Icon(
-                        imageVector = Icons.Outlined.GridView,
+                        painter = painterResource(R.drawable.menu_icon),
                         contentDescription = "Menu",
                         modifier = Modifier.size(32.dp),
                         tint = Color.Black
@@ -105,7 +105,7 @@ fun SkipperScreen2(
                 }
                 IconButton(onClick = onNotificationsClick) {
                     Icon(
-                        imageVector = Icons.Outlined.Notifications,
+                        painter = painterResource(R.drawable.notification_icon),
                         contentDescription = "Notifications",
                         modifier = Modifier.size(32.dp),
                         tint = Color.Black
@@ -113,7 +113,7 @@ fun SkipperScreen2(
                 }
                 IconButton(onClick = onProfileClick) {
                     Icon(
-                        imageVector = Icons.Outlined.Person,
+                        painter = painterResource(R.drawable.profile_icon),
                         contentDescription = "Profile",
                         modifier = Modifier.size(32.dp),
                         tint = Color.Black

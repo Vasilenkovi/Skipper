@@ -1,4 +1,4 @@
-package com.example.skipperproject.MobilePackage.CommonUI
+package com.example.skipperproject.MobilePackage.CommonUI.Mentors
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skipperproject.MobilePackage.CommonUI.TagChip
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
 import com.example.skipperproject.R
@@ -53,6 +54,8 @@ class MentorsPageActivity : ComponentActivity() {
         }
     }
 }
+
+
 
 @Composable
 fun MentorsPage(
@@ -184,19 +187,13 @@ fun MentorsPage(
 
 @Composable
 fun SocialMediaButton(resId: Int) {
-    Surface(
-        shape = CircleShape,
-        color = Color(0xFF666666),
-        modifier = Modifier.size(44.dp).clickable { /* Перейти по ссылке */ }
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            Image(
-                painter = painterResource(resId),
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
-            )
-        }
-    }
+    Image(
+        painter = painterResource(resId),
+        contentDescription = null,
+        modifier = Modifier
+            .size(44.dp)
+            .clickable { /* Перейти по ссылке */ }
+    )
 }
 
 @Composable
@@ -301,4 +298,23 @@ fun ReviewInfoCard(review: Review) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun MentorsPreview(){
+    val mentor = Mentor(
+        name = "Герасимов\nНиколай\nВалерьевич",
+        description = "Кандидат клоунских наук, победитель премии \"Каво\", ещё какая-либо инфа, что-то написать"
+    )
+    val courses = listOf(
+        Course("Путь к успеху", "Становимся крутыми за пару занятий. Ещё какой-нибудь текст, можно многое что написать. Просто описание.", "10.000 Р"),
+        Course("Путь к успеху", "Становимся крутыми за пару занятий. Ещё какой-нибудь текст, можно многое что написать. Просто описание.", "10.000 Р")
+    )
+    val reviews = listOf(
+        Review("Шишкин Роман Романович", "Крутой приятный чел. Стал миллионером за пару занятий, реально. Был нищим, а Николай сказал, что это некруто. Испра...", 5),
+        Review("Шишкин Роман Романович", "Крутой приятный чел. Стал миллионером за пару занятий, реально. Был нищим, а Николай сказал, что это некруто. Испра...", 4)
+    )
+
+    MentorsPage(mentor, courses, reviews, onBack = { })
 }

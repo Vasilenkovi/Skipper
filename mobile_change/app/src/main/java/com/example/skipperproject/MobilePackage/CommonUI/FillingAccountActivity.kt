@@ -3,9 +3,9 @@ package com.example.skipperproject.MobilePackage.CommonUI
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
@@ -39,10 +39,8 @@ class FillingAccountActivity : ComponentActivity() {
 
 @Composable
 fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
-    // Подписываемся на состояние из ViewModel (наше "узкое место")
     val uiState by viewModel.uiState.collectAsState()
 
-    // Используем готовый SkipperScreen (он сам добавит полоски сверху и снизу)
     SkipperScreen(backgroundColor = Color(0xFFE8E8E8)) {
         Column(
             modifier = Modifier
@@ -63,7 +61,6 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Поля ФИО (данные уходят во ViewModel)
             FillingInputSection(
                 label = "Фамилия",
                 value = uiState.surname,
@@ -92,7 +89,6 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Блок соцсетей
             SocialInputRow(
                 iconRes = R.drawable.vk_icon,
                 value = uiState.vkLink,
@@ -113,7 +109,6 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Кнопка сохранения
             Button(
                 onClick = { viewModel.saveData() },
                 modifier = Modifier
@@ -161,21 +156,11 @@ fun SocialInputRow(iconRes: Int, value: String, onValueChange: (String) -> Unit)
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Иконка в темном круге согласно макету
-        Surface(
-            modifier = Modifier.size(44.dp),
-            shape = CircleShape,
-            color = Color(0xFF555555)
-        ) {
-            Box(contentAlignment = Alignment.Center) {
-                Icon(
-                    painter = painterResource(id = iconRes),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = Color.White
-                )
-            }
-        }
+        Image(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier.size(42.dp)
+        )
         Spacer(modifier = Modifier.width(12.dp))
         CustomTextField(
             value = value,
