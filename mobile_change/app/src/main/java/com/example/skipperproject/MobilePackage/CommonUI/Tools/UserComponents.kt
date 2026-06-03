@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skipperproject.MobilePackage.CommonUI.theme.MobileTextStyles
@@ -32,6 +33,12 @@ fun UserSocialIconSmall(resId: Int, onClick: () -> Unit = {}) {
             .size(32.dp)
             .clickable { onClick() }
     )
+}
+
+@Preview
+@Composable
+fun ProfPreview(){
+    UserProfileHeader("Анатолий Гедеонович Розенбаум",role = "ментор", )
 }
 
 @Composable
@@ -136,3 +143,4 @@ fun UserProfileHeader(
         }
     }
 }
+

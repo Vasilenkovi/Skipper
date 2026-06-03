@@ -1,5 +1,6 @@
 package com.example.skipperproject.MobilePackage.CommonUI
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,11 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skipperproject.MobilePackage.CommonUI.Profiles.MentorsPageActivity
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
 import com.example.skipperproject.R
@@ -167,11 +170,13 @@ fun TagChip(text: String, isSelected: Boolean, onClick: () -> Unit = {}) {
 
 @Composable
 fun MentorGridCard(mentor: Mentor, onClick: () -> Unit = {}) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(0.72f)
-            .clickable { onClick() },
+            .clickable { val intent = Intent(context, MentorsPageActivity::class.java)
+                       context.startActivity(intent)},
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFF555555))
     ) {
