@@ -26,8 +26,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
-          context: . # Путь к директории с Dockerfile (точка означает корень репозитория)
-          file: ./Dockerfile # Явное указание файла (опционально, если он называется Dockerfile)
+          context: ./backend
+          file: ./backend/Dockerfile
           push: true # Флаг для автоматической отправки (push) после сборки
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/my-app:latest
