@@ -88,13 +88,6 @@ fun SkipperScreen2(
                         contentDescription = "Logo",
                         modifier = Modifier.size(156.dp)
                     )
-//                    Spacer(modifier = Modifier.width(8.dp))
-//                    Text(
-//                        text = "Skipper",
-//                        fontSize = 28.sp,
-//                        fontWeight = FontWeight.Bold,
-//                        color = Color.Black
-//                    )
                 }
             }
 

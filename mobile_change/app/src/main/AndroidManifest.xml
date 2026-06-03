@@ -43,9 +43,15 @@
 
         <activity android:name=".MobilePackage.CommonUI.Tools.TestActivity"
             android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.NotificationActivity"
+            android:exported="true" />
         <activity android:name=".MobilePackage.CommonUI.MentorInterface.AccountActivity"/>
 
         <activity android:name=".MobilePackage.CommonUI.MentorInterface.ChatsActivity"/>
+
+        <activity android:name=".MobilePackage.CommonUI.MentiProfileActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
