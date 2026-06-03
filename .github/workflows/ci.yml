@@ -76,11 +76,9 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          # Если Dockerfile лежит в папке backend, указываем context и file соответственно.
-          # Если Dockerfile в корне проекта, замените на context: . и file: ./Dockerfile
           context: ./backend
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/your-backend-app:latest
-            ${{ secrets.DOCKER_USERNAME }}/your-backend-app:${{ github.sha }}
+            ${{ secrets.DOCKER_USERNAME }}/skipper-backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/skipper-backend:${{ github.sha }}
