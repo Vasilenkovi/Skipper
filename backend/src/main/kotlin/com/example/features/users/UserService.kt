@@ -29,7 +29,7 @@ class UserService {
               it[authProvider] = request.authProvider
               it[fullName] = request.fullName
               it[role] = request.role
-              it[isEmailConfirmed] = false
+              it[isEmailConfirmed] = true
               it[confirmationCode] = generatedCode
             }.value
 

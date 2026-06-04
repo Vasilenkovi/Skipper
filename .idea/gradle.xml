@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/backend" name="skipper-backend">
+                <projects>
+                  <project path="$PROJECT_DIR$/backend" />
+                </projects>
+              </build>
+              <build path="$PROJECT_DIR$/mobile_change" name="SkipperProject">
+                <projects>
+                  <project path="$PROJECT_DIR$/mobile_change" />
+                  <project path="$PROJECT_DIR$/mobile_change/app" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/backend" />
+            <option value="$PROJECT_DIR$/mobile_change" />
             <option value="$PROJECT_DIR$/mobile_change/app" />
           </set>
         </option>

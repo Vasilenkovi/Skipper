@@ -1,9 +1,9 @@
 plugins {
   alias(libs.plugins.kotlin.jvm)
   alias(ktorLibs.plugins.ktor)
-  kotlin("plugin.serialization") version "2.1.10"
-  id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
-  id("io.gitlab.arturbosch.detekt") version "1.23.5"
+  kotlin("plugin.serialization").version("2.1.10")
+  id("org.jlleitschuh.gradle.ktlint").version("12.1.0")
+  id("io.gitlab.arturbosch.detekt").version("1.23.5")
 }
 
 group = "com.example"

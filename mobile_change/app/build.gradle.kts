@@ -7,12 +7,12 @@ plugins {
 android {
     namespace = "com.example.skipperproject"
     // Используем стабильную версию SDK для успешной синхронизации
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.skipperproject"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -35,9 +35,16 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+      kotlinCompilerExtensionVersion = "2.1.10"
+    }
 }
 
 dependencies {
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+    implementation("androidx.compose.material:material-icons-core:1.6.8")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
