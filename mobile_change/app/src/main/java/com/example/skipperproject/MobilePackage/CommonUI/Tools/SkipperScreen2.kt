@@ -7,24 +7,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.InterceptPlatformTextInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.skipperproject.MobilePackage.CommonUI.FirstSteps.LoginScreen
-import com.example.skipperproject.MobilePackage.CommonUI.NotificationScreen
+import com.example.skipperproject.MobilePackage.CommonUI.FindingMentorActivity
+import com.example.skipperproject.MobilePackage.CommonUI.NotificationActivity
 import com.example.skipperproject.MobilePackage.CommonUI.Profiles.MentiProfileActivity
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
 import com.example.skipperproject.R
@@ -34,8 +27,8 @@ fun SkipperScreen2(
     modifier: Modifier = Modifier,
     backgroundColor: Color = SkipperColors.lightGrey,
     onBackClick: (() -> Unit)? = null,
-    onMenuClick: () -> Unit = {},
-    onNotificationsClick: () -> Unit = {},
+    onMenuClick: (() -> Unit)? = null,
+    onNotificationsClick: (() -> Unit)? = null,
     onProfileClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
@@ -100,7 +93,14 @@ fun SkipperScreen2(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = onMenuClick,
+                    onClick = {
+                        if (onMenuClick != null) {
+                            onMenuClick()
+                        } else {
+                            val intent = Intent(context, FindingMentorActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    },
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
@@ -111,7 +111,14 @@ fun SkipperScreen2(
                     )
                 }
                 IconButton(
-                    onClick = onNotificationsClick,
+                    onClick = {
+                        if (onNotificationsClick != null) {
+                            onNotificationsClick()
+                        } else {
+                            val intent = Intent(context, NotificationActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    },
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
