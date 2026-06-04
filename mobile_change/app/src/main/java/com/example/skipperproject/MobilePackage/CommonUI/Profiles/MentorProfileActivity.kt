@@ -9,7 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skipperproject.MobilePackage.CommonUI.EditingProfile
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
 
@@ -40,6 +41,15 @@ fun Preview() {
 
 @Composable
 fun PersonalProfileScreen() {
+    var showEditingProfile by remember { mutableStateOf(false) }
+
+    if (showEditingProfile) {
+        EditingProfile(
+            onDismiss = { showEditingProfile = false },
+            onSave = { showEditingProfile = false }
+        )
+    }
+
     SkipperScreen2 {
         Column(
             modifier = Modifier
@@ -52,7 +62,8 @@ fun PersonalProfileScreen() {
             // Блок: Профиль (используем новый компонент из Tools)
             UserProfileHeader(
                 name = "Герасимов\nНиколай\nВалерьевич",
-                role = "ментор"
+                role = "ментор",
+                onEditClick = { showEditingProfile = true }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

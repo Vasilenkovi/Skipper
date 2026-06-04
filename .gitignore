@@ -1,23 +1,39 @@
-## Временные файлы Android Studio / IntelliJ IDEA
-#.idea/
-#*.iml
-#.gradle/
-#build/
-#captures/
-#externalNativeBuild/
-#.cxx/
-#local.properties
-#
-## Логи и временные файлы ОС
-#*.log
-#.DS_Store
-#thumbs.db
-#
-## Конфиденциальные данные
-#.env
-#secrets.xml
-#
-## Специфично для Gradle
-#/build
-#/*/build
-#.gradle
+# Gradle files
+.gradle/
+build/
+/*/build/
+
+# Kotlin
+.kotlin/
+kotlin-daemon-*.sys.err
+kotlin-daemon-*.sys.out
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Android Studio
+local.properties
+.navigation/
+captures/
+.externalNativeBuild/
+.cxx/
+output.json
+
+# Memory dumps
+*.hprof
+
+# Signing files
+*.jks
+*.keystore
+*.p12
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+*.apk
+*.aab
