@@ -15,7 +15,7 @@
         
 
 
-        <activity android:name=".MobilePackage.CommonUI.MainScreenActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.MainScreenActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,21 +23,38 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".MobilePackage.CommonUI.LoginActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.LoginActivity"
             android:exported="true" />
 
-        <activity android:name=".MobilePackage.CommonUI.CreateAccountActivity"
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.CreateAccountActivity"
             android:exported="true" />
 
-        <activity android:name=".MobilePackage.CommonUI.PersonalProfileActivity"
+        <activity android:name=".MobilePackage.CommonUI.Profiles.MentorProfileActivity"
+            android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.FirstSteps.FillingAccountActivity"
+            android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.FindingMentorActivity"
+            android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.Profiles.MentorsPageActivity"
             android:exported="true" />
 
 
         <activity android:name=".MobilePackage.CommonUI.Tools.TestActivity"
             android:exported="true" />
-        <activity android:name=".MobilePackage.CommonUI.MentorInterface.AccountActivity"/>
 
-        <activity android:name=".MobilePackage.CommonUI.MentorInterface.ChatsActivity"/>
+        <activity android:name=".MobilePackage.CommonUI.NotificationActivity"
+            android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.Profiles.MentiProfileActivity"
+            android:exported="true" />
+
+        <activity android:name=".MobilePackage.CommonUI.Profiles.MentiPageActivity"
+            android:exported="true" />
+
+
     </application>
 
 </manifest>

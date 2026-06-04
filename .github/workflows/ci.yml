@@ -44,6 +44,9 @@ jobs:
         working-directory: backend
         env:
           JWT_SECRET: test-secret-key-for-contract-testing
+      - name: Run Security and Route Tests
+        run: ./gradlew test --tests "ApiSecurityTest" --tests "AvailabilityRoutesTest" --tests "*RoutesTest" --no-daemon
+        working-directory: backend
 
       - name: Validate OpenAPI Spec
         run: |
@@ -51,3 +54,31 @@ jobs:
           swagger-cli validate openapi.yaml
         working-directory: backend
         continue-on-error: true
+  build-and-push-docker:
+    needs: lint-and-analyze # Ждет успешного завершения предыдущего джоба
+    runs-on: ubuntu-latest
+    # Запускаем ТОЛЬКО при push в main или develop (игнорируем pull_request)
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/skipper-backend:latest
+            ${{ secrets.DOCKER_USERNAME }}/skipper-backend:${{ github.sha }}
