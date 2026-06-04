@@ -45,111 +45,137 @@ class FindingMentorActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun FindingMentorScreen() {
-    var searchQuery by remember { mutableStateOf("") }
+  var searchQuery by remember { mutableStateOf("") }
+  val context = LocalContext.current // Нужно для перехода на другие экраны
 
-    // Тестовые данные для сетки
-    val mentors = listOf(
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете"),
-        Mentor("Герасимов\nНиколай\nВалерьевич", "Кандидат самых лучших наук,\nпобедитель всех на свете")
-    )
+  // 1. УБРАЛИ фейковый список. Теперь тут пустой список, который ждет данные
+  var mentorsList by remember { mutableStateOf<List<Mentor>>(emptyList()) }
+  var isLoading by remember { mutableStateOf(true) } // Флаг загрузки
 
-    SkipperScreen2 {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-        ) {
-            Spacer(modifier = Modifier.height(28.dp))
+  // 2. МАГИЯ СЕТИ: Как только экран открывается, идем на сервер
+  LaunchedEffect(Unit) {
+    val jsonArray = NetworkClient.getMentorsList()
+    val parsedMentors = mutableListOf<Mentor>()
 
-            // Заголовок: "Приём, Skipper? Нужна помощь"
-            Text(
-                text = "Приём, Skipper?\nНужна помощь",
-                style = MobileTextStyles.MainScreenText.copy(
-                    fontSize = 38.sp,
-                    lineHeight = 40.sp,
-                    letterSpacing = (-1.5).sp
-                ),
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
-            )
+    if (jsonArray != null) {
+      for (i in 0 until jsonArray.length()) {
+        val userJson = jsonArray.getJSONObject(i)
 
-            Spacer(modifier = Modifier.height(28.dp))
+        // УБРАЛИ ПРОВЕРКУ РОЛИ (if).
+        // Берем всех подряд, так как сервер уже отфильтровал их для нас!
+        val fullName = userJson.optString("fullName", "Без имени")
+        val contactInfo = userJson.optString("contactInfo", "Нет описания")
 
-            // "Найди того, кто тебе нужен"
-            Text(
-                text = "Найди того, кто тебе нужен",
-                style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // Поиск
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                IconButton(
-                    onClick = { /* TODO: Логика поиска */ },
-                    modifier = Modifier.size(36.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.search_icon),
-                        contentDescription = "Search",
-                        modifier = Modifier.size(28.dp),
-                        tint = Color.Gray
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                CustomTextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(28.dp))
-
-            // "Популярные #теги"
-            Text(
-                text = "Популярные #теги",
-                style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Список тегов
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                TagChip("Бизнес", isSelected = true)
-                TagChip("Логистика", isSelected = true)
-                TagChip("Веб-дизайн", isSelected = false)
-
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Сетка карточек менторов
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 20.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(mentors) { mentor ->
-                    MentorGridCard(mentor)
-                }
-            }
-        }
+        // Создаем карточку ментора
+        parsedMentors.add(Mentor(fullName, contactInfo))
+      }
     }
+    mentorsList = parsedMentors // Отдаем полученные данные в интерфейс
+    isLoading = false // Выключаем загрузку
+  }
+
+  SkipperScreen2 {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 20.dp)
+    ) {
+      Spacer(modifier = Modifier.height(28.dp))
+
+      // Заголовок: "Приём, Skipper? Нужна помощь"
+      Text(
+        text = "Приём, Skipper?\nНужна помощь",
+        style = MobileTextStyles.MainScreenText.copy(
+          fontSize = 38.sp,
+          lineHeight = 40.sp,
+          letterSpacing = (-1.5).sp
+        ),
+        color = Color.Black,
+        fontWeight = FontWeight.Bold
+      )
+
+      Spacer(modifier = Modifier.height(28.dp))
+
+      // "Найди того, кто тебе нужен"
+      Text(
+        text = "Найди того, кто тебе нужен",
+        style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
+        color = Color.Black,
+        fontWeight = FontWeight.SemiBold
+      )
+
+      Spacer(modifier = Modifier.height(10.dp))
+
+      // Поиск (UI оставляем как есть)
+      Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+      ) {
+        IconButton(
+          onClick = { /* TODO: Логика поиска */ },
+          modifier = Modifier.size(36.dp)
+        ) {
+          Icon(
+            painter = painterResource(R.drawable.search_icon),
+            contentDescription = "Search",
+            modifier = Modifier.size(28.dp),
+            tint = Color.Gray
+          )
+        }
+        Spacer(modifier = Modifier.width(12.dp))
+        CustomTextField(
+          value = searchQuery,
+          onValueChange = { searchQuery = it },
+          modifier = Modifier.weight(1f)
+        )
+      }
+
+      Spacer(modifier = Modifier.height(28.dp))
+
+      // "Популярные #теги"
+      Text(
+        text = "Популярные #теги",
+        style = MobileTextStyles.QuestionText.copy(fontSize = 18.sp),
+        color = Color.Black,
+        fontWeight = FontWeight.SemiBold
+      )
+
+      Spacer(modifier = Modifier.height(12.dp))
+
+      // Список тегов
+      Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+      ) {
+        TagChip("Бизнес", isSelected = true)
+        TagChip("Логистика", isSelected = true)
+        TagChip("Веб-дизайн", isSelected = false)
+      }
+
+      Spacer(modifier = Modifier.height(24.dp))
+
+      // 3. ОТРИСОВКА СЕТКИ
+      if (isLoading) {
+        // Пока ждем ответа от Ktor, показываем крутилку или текст
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+          Text("Ищем наставников...", color = Color.Gray)
+        }
+      } else {
+        // Когда данные пришли, рисуем карточки
+        LazyVerticalGrid(
+          columns = GridCells.Fixed(2),
+          horizontalArrangement = Arrangement.spacedBy(16.dp),
+          verticalArrangement = Arrangement.spacedBy(16.dp),
+          contentPadding = PaddingValues(bottom = 20.dp),
+          modifier = Modifier.fillMaxSize()
+        ) {
+          items(mentorsList) { mentor -> // Передаем живой список!
+            MentorGridCard(mentor)
+          }
+        }
+      }
+    }
+  }
 }
 
 @Composable

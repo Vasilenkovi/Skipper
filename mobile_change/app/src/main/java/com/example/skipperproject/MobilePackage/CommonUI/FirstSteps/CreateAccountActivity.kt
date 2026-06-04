@@ -25,6 +25,9 @@ import com.example.skipperproject.MobilePackage.CommonUI.Tools.SkipperScreen
 import com.example.skipperproject.MobilePackage.CommonUI.theme.MobileTextStyles
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperProjectTheme
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.skipperproject.MobilePackage.CommonUI.NetworkClient
 
 class CreateAccountActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,6 +47,8 @@ fun CreateAccountScreen() {
     var password by remember { mutableStateOf("") }
     var repeatPassword by remember { mutableStateOf("") }
     val interactionSource = remember { MutableInteractionSource() }
+
+    val coroutineScope = rememberCoroutineScope()
 
     SkipperScreen(backgroundColor = Color(0xFFE8E8E8)) {
         Column(
@@ -86,7 +91,17 @@ fun CreateAccountScreen() {
             Spacer(modifier = Modifier.height(24.dp))
 
             // 5. Кнопка подтверждения и повторная отправка
-            ConfirmationRow(interactionSource = interactionSource)
+          ConfirmationRow(
+            interactionSource = interactionSource,
+            onRegisterClick = { onSuccess ->
+              coroutineScope.launch {
+                val success = NetworkClient.registerOrLogin(email, password, isLogin = false)
+                if (success) {
+                  onSuccess() // Сервер ответил 201/200, показываем диалог!
+                }
+              }
+            }
+          )
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -129,7 +144,7 @@ fun NumberedInputSection(label: String, value: String, onValueChange: (String) -
 }
 
 @Composable
-fun ConfirmationRow(interactionSource: MutableInteractionSource) {
+fun ConfirmationRow(interactionSource: MutableInteractionSource, onRegisterClick: (onSuccess: () -> Unit) -> Unit) {
     val context = LocalContext.current
     var showEmailDialog by remember { mutableStateOf(false) }
 
@@ -139,7 +154,9 @@ fun ConfirmationRow(interactionSource: MutableInteractionSource) {
     ) {
         Button(
             onClick = {
+              onRegisterClick {
                 showEmailDialog = true
+              }
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = SkipperColors.mainYellow,

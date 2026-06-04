@@ -9,6 +9,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.skipperproject.MobilePackage.CommonUI.NetworkClient
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.*
 import com.example.skipperproject.MobilePackage.CommonUI.theme.*
 import com.example.skipperproject.R
@@ -35,6 +41,21 @@ class MentiProfileActivity : ComponentActivity() {
 
 @Composable
 fun MentiProfileScreen() {
+    var nameState by remember { mutableStateOf("Загрузка...") }
+    var contactsState by remember { mutableStateOf("") }
+
+    // LaunchedEffect сработает ОДИН РАЗ при открытии этого экрана
+    LaunchedEffect(Unit) {
+      val profileJson = NetworkClient.getProfile()
+      if (profileJson != null) {
+        // Парсим то, что отдал твой Ktor-сервер (подставь свои ключи из базы)
+        nameState = profileJson.optString("fullName", "Имя не указано")
+        contactsState = profileJson.optString("contactInfo", "Контакты не указаны")
+      } else {
+        nameState = "Ошибка загрузки"
+      }
+    }
+
     val menti = Menti(
         name = "Романов\nРоман\nРоманович"
     )
@@ -63,7 +84,7 @@ fun MentiProfileScreen() {
             // Заголовок "Личный профиль"
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    text = "Личный профиль",
+                    text = nameState,
                     style = MobileTextStyles.MainScreenText.copy(
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold

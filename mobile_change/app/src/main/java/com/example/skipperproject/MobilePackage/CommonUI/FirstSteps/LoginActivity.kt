@@ -1,5 +1,8 @@
 package com.example.skipperproject.MobilePackage.CommonUI.FirstSteps
 
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
+import com.example.skipperproject.MobilePackage.CommonUI.NetworkClient
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -41,50 +44,53 @@ class LoginActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen() {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val interactionSource = remember { MutableInteractionSource() }
+  var email by remember { mutableStateOf("") }
+  var password by remember { mutableStateOf("") }
+  val interactionSource = remember { MutableInteractionSource() }
 
-    SkipperScreen() {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp)
-        ) {
-            Spacer(modifier = Modifier.height(40.dp))
+  // Добавляем корутины и контекст
+  val coroutineScope = rememberCoroutineScope()
+  val context = LocalContext.current
 
-            LoginHeader(onClick = { /* Действие при нажатии на заголовок */ })
+  SkipperScreen() {
+    Column(
+      modifier = Modifier
+        .fillMaxSize()
+        .padding(horizontal = 24.dp)
+    ) {
+      Spacer(modifier = Modifier.height(40.dp))
+      LoginHeader(onClick = { })
+      Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(32.dp))
+      EmailInput(value = email, onValueChange = { email = it })
+      Spacer(modifier = Modifier.height(16.dp))
 
-            EmailInput(
-                value = email,
-                onValueChange = { email = it }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            PasswordInput(
-                value = password,
-                onValueChange = { password = it },
-                onLoginClick = { /* Логика входа */ }
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ForgotPassword(
-                interactionSource = interactionSource,
-                onClick = { /* Логика восстановления пароля */ }
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            RegistrationFooter(
-                interactionSource = interactionSource,
-                onRegisterClick = { /* Логика перехода к регистрации */ }
-            )
+      PasswordInput(
+        value = password,
+        onValueChange = { password = it },
+        onLoginClick = {
+          // ВОТ ОНА — НАСТОЯЩАЯ ИНТЕГРАЦИЯ!
+          coroutineScope.launch {
+            val success = NetworkClient.registerOrLogin(email, password, isLogin = true)
+            if (success) {
+              // Если сервер ответил 200 ОК, пускаем дальше
+              val intent = Intent(context, FindingMentorActivity::class.java)
+              context.startActivity(intent)
+            } else {
+              // Если ошибка (неверный пароль), пока ничего не делаем,
+              // но в логах Android Studio будет ошибка
+              println("Ошибка авторизации!")
+            }
+          }
         }
+      )
+
+      Spacer(modifier = Modifier.height(12.dp))
+      ForgotPassword(interactionSource = interactionSource, onClick = { })
+      Spacer(modifier = Modifier.height(32.dp))
+      RegistrationFooter(interactionSource = interactionSource, onRegisterClick = { })
     }
+  }
 }
 
 @Composable
@@ -138,21 +144,18 @@ fun PasswordInput(value: String, onValueChange: (String) -> Unit, onLoginClick: 
                 modifier = Modifier.weight(1f)
             )
             Spacer(modifier = Modifier.width(12.dp))
-            IconButton(
-                onClick = {
-                    val intent = Intent(context, FindingMentorActivity::class.java)
-                    context.startActivity(intent)
-
-
-                },
-                modifier = Modifier.size(56.dp)
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.loginicon),
-                    contentDescription = "Login",
-                    tint = Color.Unspecified
-                )
-            }
+          IconButton(
+            onClick = {
+              onLoginClick() // <--- ТЕПЕРЬ ОНА ВЫЗЫВАЕТ НАШУ ФУНКЦИЮ С СЕТЬЮ
+            },
+            modifier = Modifier.size(56.dp)
+          ) {
+            Icon(
+              painter = painterResource(id = R.drawable.loginicon),
+              contentDescription = "Login",
+              tint = Color.Unspecified
+            )
+          }
         }
     }
 }

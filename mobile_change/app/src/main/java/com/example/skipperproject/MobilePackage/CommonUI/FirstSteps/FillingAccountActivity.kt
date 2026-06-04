@@ -22,12 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.skipperproject.MobilePackage.CommonUI.FindingMentorActivity
+import com.example.skipperproject.MobilePackage.CommonUI.NetworkClient
 import com.example.skipperproject.R
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.CustomTextField
 import com.example.skipperproject.MobilePackage.CommonUI.Tools.SkipperScreen
 import com.example.skipperproject.MobilePackage.CommonUI.theme.MobileTextStyles
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperProjectTheme
+import kotlinx.coroutines.launch
 
 class FillingAccountActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,7 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
     val uiState by viewModel.uiState.collectAsState()
     val context = LocalContext.current
 
+    val coroutineScope = rememberCoroutineScope()
     SkipperScreen(backgroundColor = Color(0xFFE8E8E8)) {
         Column(
             modifier = Modifier
@@ -114,11 +117,29 @@ fun FillingAccountScreen(viewModel: FillingAccountViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { viewModel.saveData()
-                           val intent = Intent(context, FindingMentorActivity::class.java)
-                           context.startActivity(intent)
+              onClick = {
+                viewModel.saveData() // Локальное сохранение оставляем
 
-                          },
+                // 1. Склеиваем ФИО в одну строчку
+                val fullName = "${uiState.surname} ${uiState.firstName} ${uiState.patronymic}".trim()
+
+                // 2. Собираем все непустые ссылки в одну строку контактов
+                val contacts = listOf(uiState.vkLink, uiState.whatsappLink, uiState.telegramLink)
+                  .filter { it.isNotBlank() }
+                  .joinToString(" | ")
+
+                // 3. Отправляем на бэкенд
+                coroutineScope.launch {
+                  val success = NetworkClient.updateProfile(fullName, contacts)
+                  if (success) {
+                    // Если сервер ответил 200 ОК, переходим дальше!
+                    val intent = Intent(context, FindingMentorActivity::class.java)
+                    context.startActivity(intent)
+                  } else {
+                    println("Ошибка при сохранении профиля! Проверьте Logcat")
+                  }
+                }
+              },
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .height(30.dp),
