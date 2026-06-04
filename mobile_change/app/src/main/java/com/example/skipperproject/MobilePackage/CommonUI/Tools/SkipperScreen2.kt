@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.skipperproject.MobilePackage.CommonUI.FirstSteps.LoginScreen
 import com.example.skipperproject.MobilePackage.CommonUI.NotificationScreen
+import com.example.skipperproject.MobilePackage.CommonUI.Profiles.MentiProfileActivity
 import com.example.skipperproject.MobilePackage.CommonUI.theme.SkipperColors
 import com.example.skipperproject.R
 
@@ -35,9 +36,11 @@ fun SkipperScreen2(
     onBackClick: (() -> Unit)? = null,
     onMenuClick: () -> Unit = {},
     onNotificationsClick: () -> Unit = {},
-    onProfileClick: () -> Unit = {},
+    onProfileClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit,
 ) {
+    val context = LocalContext.current
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -108,8 +111,7 @@ fun SkipperScreen2(
                     )
                 }
                 IconButton(
-                    onClick = {
-                    },
+                    onClick = onNotificationsClick,
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
@@ -120,7 +122,14 @@ fun SkipperScreen2(
                     )
                 }
                 IconButton(
-                    onClick = onProfileClick,
+                    onClick = {
+                        if (onProfileClick != null) {
+                            onProfileClick()
+                        } else {
+                            val intent = Intent(context, MentiProfileActivity::class.java)
+                            context.startActivity(intent)
+                        }
+                    },
                     modifier = Modifier.size(48.dp)
                 ) {
                     Icon(
