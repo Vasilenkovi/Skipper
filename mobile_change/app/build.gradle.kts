@@ -7,12 +7,12 @@ plugins {
 android {
     namespace = "com.example.skipperproject"
     // Используем стабильную версию SDK для успешной синхронизации
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.skipperproject"
         minSdk = 29
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -35,9 +35,12 @@ android {
     buildFeatures {
         compose = true
     }
+  buildToolsVersion = "36.0.0"
 }
 
 dependencies {
+    implementation("androidx.compose.material:material-icons-core:1.6.8")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
